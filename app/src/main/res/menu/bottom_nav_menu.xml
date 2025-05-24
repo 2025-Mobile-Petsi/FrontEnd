@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home3"
+        android:title="홈" />
+
+    <item
+        android:id="@+id/nav_walk"
+        android:icon="@drawable/dogpaw"
+        android:title="산책" />
+
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@drawable/gps"
+        android:title="지도" />
+
+    <item
+        android:id="@+id/nav_diary"
+        android:icon="@drawable/diary"
+        android:title="일기장" />
+</menu>

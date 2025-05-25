@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/main_banner" />
+                android:src="@drawable/banner" />
 
             <!-- 기능 버튼 2개 -->
             <LinearLayout
@@ -42,61 +42,49 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:padding="8dp">
 
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="산책"
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/abandoned_animal"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/abandoned_animal"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="산책이미지버튼"
-                        android:scaleType="centerCrop" />
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:src="@drawable/go_walking"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="산책하기" />
+
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="지도"
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/lost_animal"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/lost_animal"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="지도 이미지 버튼"
-                        android:scaleType="centerCrop" />
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:src="@drawable/seeing_map"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="지도보기" />
+
+
                 </LinearLayout>
             </LinearLayout>
-
             <!-- 유기동물, 실종동물 + 더보기 -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +97,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="유기동물, 실종동물"
+                    android:text="시흥시의 실종/유기 동물"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -125,25 +113,74 @@
             </LinearLayout>
 
             <!-- 입양 리스트 카드뷰 -->
+            <!-- 입양 리스트 카드뷰 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:weightSum="3"
+                android:paddingHorizontal="8dp">
 
-                <ImageView
-                    android:layout_width="154dp"
-                    android:layout_height="154dp"
-                    android:layout_margin="4dp"
-                    android:src="@drawable/blackdog" />
+                <!-- 카드 1 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="4dp">
 
-                <ImageView
-                    android:layout_width="154dp"
-                    android:layout_height="154dp"
-                    android:layout_margin="4dp"
-                    android:src="@drawable/hairydog" />
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:src="@drawable/dog1"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="강아지1" />
+
+
+                </LinearLayout>
+
+                <!-- 카드 2 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="4dp">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:src="@drawable/dog2"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="강아지2" />
+
+
+                </LinearLayout>
+
+                <!-- 카드 3 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="4dp">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:src="@drawable/dog3"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="강아지3" />
+
+
+                </LinearLayout>
             </LinearLayout>
+
 
             <!-- 정책 섹션 + 더보기 -->
             <LinearLayout
@@ -172,11 +209,23 @@
                     android:focusable="true" />
             </LinearLayout>
 
-            <Button
+            <TextView
+                android:id="@+id/eventBanner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="행사 반려동물과 함께 하는 PET Festival"
-                android:layout_marginTop="8dp" />
+                android:layout_height="44dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="64dp"
+                android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/event_button"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="행사 반려동물과 함께 하는 PET Festival"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:elevation="8dp" />
         </LinearLayout>
     </ScrollView>
 

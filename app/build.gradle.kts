@@ -5,9 +5,9 @@ plugins {
 
 android {
 
-    viewBinding{
-        enable = true
-    }
+   viewBinding{
+       enable = true
+   }
     namespace = "com.example.petsi"
     compileSdk = 35
 
@@ -41,6 +41,11 @@ android {
 
 dependencies {
 
+    //지도 관련
+    implementation("com.naver.maps:map-sdk:3.21.0")
+    //밑에 두 개는 날씨 관련
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

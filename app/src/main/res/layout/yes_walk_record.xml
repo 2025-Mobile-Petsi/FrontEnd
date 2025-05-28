@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- ✅ 상단 날짜 박스 (테두리 회복) -->
+    <TextView
+        android:id="@+id/tv_walk_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2025년 5월 7일의 산책 기록"
+        android:textColor="#66BB6A"
+        android:textSize="14sp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:background="@drawable/green_button_for_norecord"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ✅ 둥근 버튼 -->
+    <Button
+        android:id="@+id/btn_go_diary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 일기 쓰러 가기!"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:background="@drawable/rounded_green_button"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <!-- ✅ 하단 3분할 박스 (가운데 정렬) -->
+    <LinearLayout
+        android:id="@+id/walk_summary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_walk_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 총 산책 시간 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="4dp"
+            android:background="#66BB6A">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="32분"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="총 산책 시간"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- 총 산책 거리 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="4dp"
+            android:background="#66BB6A">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1.5km"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="총 산책 거리"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- 산책 이미지 -->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginStart="2dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/blackdog" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

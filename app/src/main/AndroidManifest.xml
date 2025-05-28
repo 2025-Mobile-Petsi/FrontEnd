@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.petsi">
+
+    <!-- 지도 및 날씨 관련 권한 설정 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,15 +18,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Petsi"
         tools:targetApi="31">
+
+        <!-- ❌ MainActivity는 일반 액티비티로 전환 -->
         <activity
             android:name=".MainActivity"
+            android:exported="true" />
+
+        <!-- ✅ activity_walking_with_map를 앱 시작 액티비티로 설정 -->
+        <activity
+            android:name=".activity_walking_with_map"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <!-- ✅ 네이버 지도 API 키 -->
+        <meta-data
+            android:name="com.naver.maps.map.NCP_KEY_ID"
+            android:value="k23b2ztztk" />
+
+    </application>
 </manifest>

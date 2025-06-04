@@ -19,20 +19,19 @@
         android:theme="@style/Theme.Petsi"
         tools:targetApi="31">
 
-        <!-- ❌ MainActivity는 일반 액티비티로 전환 -->
+        <!-- ✅ MainActivity를 앱 시작 액티비티로 설정 -->
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
-
-        <!-- ✅ activity_walking_with_map를 앱 시작 액티비티로 설정 -->
-        <activity
-            android:name=".activity_walking_with_map"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity_walking_with_map"
+            android:exported="true" />
 
         <!-- ✅ 네이버 지도 API 키 -->
         <meta-data

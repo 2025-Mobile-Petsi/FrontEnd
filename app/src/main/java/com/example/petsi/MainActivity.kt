@@ -11,20 +11,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // ✅ 지도 이미지 클릭 시 activity_walking_with_map으로 이동
+        // ✅ 지도 이미지 클릭 시 activity_watching_map으로 이동
         val lostAnimalImageView = findViewById<ImageView>(R.id.lost_animal)
         lostAnimalImageView.setOnClickListener {
-            val intent = Intent(this, activity_walking_with_map::class.java)
+            val intent = Intent(this, activity_watching_map::class.java)
             startActivity(intent)
         }
 
-        // ✅ 하단 네비게이션 바 "지도" 버튼 클릭 시 이동
-        // 현재 화면이 지도이면 그대로 유지
+        // ✅ 하단 네비게이션 바 "지도" 버튼 클릭 시 activity_watching_map으로 이동
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_map -> {
-                    val intent = Intent(this, activity_walking_with_map::class.java)
+                    val intent = Intent(this, activity_watching_map::class.java)
                     startActivity(intent)
                     true
                 }

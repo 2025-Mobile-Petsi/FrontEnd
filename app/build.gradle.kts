@@ -46,6 +46,9 @@ dependencies {
     //밑에 두 개는 날씨 관련
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    //지도 검색 관련
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    //기존 의존성 관련
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

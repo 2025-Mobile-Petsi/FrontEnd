@@ -9,8 +9,8 @@
 
     <!-- ✅ 상단 툴바 -->
     <include
-        android:id="@+id/customToolbar"
-        layout="@layout/toolbar_custom"
+        android:id="@+id/toolbar"
+        layout="@layout/section_toolbar_custom"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -27,22 +27,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/customToolbar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintVertical_bias="0.475" />
 
     <include
         android:id="@+id/layout_walk_summary"
-        layout="@layout/walking_information_running"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        layout="@layout/section_walking_information_running"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <ImageView
+        android:id="@+id/btn_gps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/ic_gps"
+        app:layout_constraintStart_toStartOf="@id/map_fragment"
+        app:layout_constraintBottom_toBottomOf="@id/map_fragment"/>
+
     <!-- ✅ 하단 네비게이션 바 -->
     <include
-        android:id="@+id/bottomNavigationView"
-        layout="@layout/bottom_nav"
+        android:id="@+id/bottomNav"
+        layout="@layout/section_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

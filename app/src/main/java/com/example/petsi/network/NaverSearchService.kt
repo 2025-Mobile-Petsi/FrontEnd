@@ -13,4 +13,5 @@ interface NaverSearchService {
         @Query("sort") sort: String = "distance", // 거리순
         @Query("display") display: Int = 5
     ): Call<NaverSearchResponse>
+
 }

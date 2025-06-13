@@ -25,4 +25,14 @@ object ApiClient {
 
         return retrofit.create(NaverSearchService::class.java)
     }
+
+    private const val WALK_LOG_BASE_URL = "https://api.petsi.com/"  // ← 꼭 실제 서버 주소로 변경
+
+    val walkLogApiService: WalkLogApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(WALK_LOG_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(WalkLogApiService::class.java)
+    }
 }

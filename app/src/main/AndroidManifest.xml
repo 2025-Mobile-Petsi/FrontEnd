@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.petsi">
+
     <!-- 지도 및 날씨 관련 권한 설정 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--현재 위치(GPS) 가져오기-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -17,25 +19,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Petsi"
         tools:targetApi="31">
-        <activity
-            android:name=".activity_watching_map"
-            android:exported="false" />
-        <!-- ✅ MainActivity를 앱 시작 액티비티로 설정 -->
+
+        <!-- 메인 액티비티 -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 산책 시작 페이지 액티비티 -->
         <activity
-            android:name=".activity_walking_with_map"
-            android:exported="true" /> <!-- ✅ 네이버 지도 API 키 -->
+            android:name=".WalkingStartPageActivity"
+            android:exported="false" />
+
+        <!-- 지도 페이지 액티비티 -->
+        <activity
+            android:name=".WalkingWithMapActivity"
+            android:exported="false" />
+
+        <!-- 지도 필터링 액티비티 -->
+        <activity
+            android:name=".MapFilteringActivity"
+            android:exported="false" />
+
+        <!-- ✅ 네이버 지도 API 키 -->
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
             android:value="k23b2ztztk" />
-    </application>
 
+    </application>
 </manifest>

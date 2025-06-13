@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">petsi</string>
+    <string name="walk_duration">%1$d분 %2$d초 경과</string>
+    <string name="walk_distance">%1$d미터</string>
 </resources>

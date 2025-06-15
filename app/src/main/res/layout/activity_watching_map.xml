@@ -146,7 +146,17 @@
                 android:layout_marginTop="4dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    <Button
+        android:id="@+id/btnMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내 위치"
+        android:textSize="12sp"
+        android:layout_margin="12dp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent" />
     <!-- ✅ 하단 네비게이션 바 -->
     <include
         android:id="@+id/bottomNavigationView"

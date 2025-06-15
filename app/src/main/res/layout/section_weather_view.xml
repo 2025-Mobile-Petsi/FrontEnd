@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weather"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 1. 제목 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="오늘의 날씨"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:id="@+id/textRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="새로 고침"
+            android:textSize="10dp"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+
+    <!-- 2. 날씨 카드 박스 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/box_walk_record_card"
+        android:elevation="4dp">
+
+        <!-- 상단 버튼 태그 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textRegion"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/box_green_outline_box"
+                android:padding="4dp"
+                android:gravity="center"
+                android:textColor="@color/main_color"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/textTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/box_green_outline_box"
+                android:padding="4dp"
+                android:gravity="center"
+                android:textColor="@color/main_color"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/textSky"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_green_outline_box"
+                android:padding="4dp"
+                android:gravity="center"
+                android:textColor="@color/main_color"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+        <!-- 중단: 아이콘 + 날짜 + 현재온도 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/image_sun" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 하단: 최고/최저/강수 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textTmx"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="22dp"
+                android:background="@drawable/btn_green_button"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/textTmn"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="22dp"
+                android:background="@drawable/btn_green_button"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/textPop"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_green_button"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <!-- ✅ 로딩 인디케이터 추가 -->
+        <ProgressBar
+            android:id="@+id/weatherLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleSmall" />
+    </LinearLayout>
+</LinearLayout>

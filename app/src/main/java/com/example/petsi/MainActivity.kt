@@ -14,27 +14,32 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ✅ 클릭 시 WalkingStartPageActivity로 이동 + 전환 애니메이션 적용
+        // 1. 상단 로고 클릭 시 새로고침 (전환 애니메이션 제거)
+        binding.toolbar.logoHome.setOnClickListener {
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)  // 👉 전환 시작 애니메이션
+            recreate()
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)  // 👉 recreate 후 적용 애니메이션
+        }
+
+        // 2. 산책하기 버튼 → WalkingStartPageActivity
         binding.mainGoWalking.setOnClickListener {
             val intent = Intent(this, WalkingStartPageActivity::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
-        // 🔹 지도 보기 버튼 클릭 시
+        // 3. 지도 보기 버튼 → MapFilteringActivity
         binding.btnSeeMap.setOnClickListener {
             val intent = Intent(this, MapFilteringActivity::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
-        // ✅ 앱 시작 시 하단 네비게이션 바의 홈 아이콘 선택 상태로 설정
+        // 4. 하단 네비게이션
         binding.bottomNav.bottomNavigationView.selectedItemId = R.id.nav_home
-
-        // ✅ 하단 네비게이션 바 클릭 처리
         binding.bottomNav.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> true // 현재 화면이므로 이동하지 않음
+                R.id.nav_home -> true
 
                 R.id.nav_walk -> {
                     val intent = Intent(this, WalkingStartPageActivity::class.java)
@@ -56,9 +61,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
-        // 홈 버튼을 항상 선택된 상태로 표시
         binding.bottomNav.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 }

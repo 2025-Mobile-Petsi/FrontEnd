@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#444444</color>
+    <color name="rear_black">#000000</color>
+    <color name="main_background">#F5F5F5</color>
     <color name="white">#FFFFFF</color>
     <color name="main_color">#7DB36F</color>
     <color name="out_line">#D9D9D9</color>
     <color name="text_color_black">#444444</color>
-    <color name="green_enabled">#4CAF50</color> <!-- 연두 느낌 -->
-    <color name="gray_disabled">#CCCCCC</color>
 
 </resources>

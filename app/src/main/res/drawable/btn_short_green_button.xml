@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 눌렸을 때 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#7DB36F"
+                android:endColor="#7DB36F"
+                android:angle="270"/>
+            <corners android:radius="10dp" />
+
+        </shape>
+    </item>
+
+    <!-- 기본 상태 -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#7DB36F"
+                android:endColor="#7DB36F"
+                android:angle="270"/>
+            <corners android:radius="10dp" /> <!-- 여기만 50dp였던 걸 8dp로 변경 -->
+
+        </shape>
+    </item>
+</selector>

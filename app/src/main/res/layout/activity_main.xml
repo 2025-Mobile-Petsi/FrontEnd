@@ -5,11 +5,16 @@
     android:id="@+id/mainpepsi"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
     <!-- ✅ 상단 툴바 (오류 없는 기본 상태) -->
     <include
-        layout="@layout/toolbar_custom" />
+        android:id="@+id/toolbar"
+        layout="@layout/section_toolbar_custom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 
@@ -18,13 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginBottom="56dp">
+        android:paddingBottom="56dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingTop="1dp">
 
             <!-- 배너 -->
             <ImageView
@@ -32,8 +39,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:layout_marginTop="1dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/banner" />
+                android:src="@drawable/image_banner" />
 
             <!-- 기능 버튼 2개 -->
             <LinearLayout
@@ -41,9 +49,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="16dp"
-                android:weightSum="2"
-                android:padding="8dp">
+                android:layout_marginTop="10dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,13 +63,18 @@
                     android:clickable="true"
                     android:focusable="true">
 
+                    <!--하단 버튼 클릭시 효과-->
                     <ImageView
-                        android:id="@+id/abandoned_animal"
+                        android:id="@+id/main_go_walking"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
-                        android:src="@drawable/go_walking"
+                        android:src="@drawable/btn_go_walking"
                         android:scaleType="fitCenter"
-                        android:contentDescription="산책하기" />
+                        android:contentDescription="산책하기"
+
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"/>
 
 
                 </LinearLayout>
@@ -75,12 +89,16 @@
                     android:focusable="true">
 
                     <ImageView
-                        android:id="@+id/lost_animal"
+                        android:id="@+id/btnSeeMap"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
-                        android:src="@drawable/seeing_map"
+                        android:src="@drawable/btn_seeing_map"
                         android:scaleType="fitCenter"
-                        android:contentDescription="지도보기" />
+                        android:contentDescription="지도보기"
+
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"/>
 
 
                 </LinearLayout>
@@ -98,6 +116,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="시흥시의 실종/유기 동물"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -107,6 +127,7 @@
                     android:layout_height="wrap_content"
                     android:text="더보기 >"
                     android:textColor="@color/black"
+                    android:paddingEnd="10dp"
                     android:textSize="14sp"
                     android:clickable="true"
                     android:focusable="true" />
@@ -135,7 +156,7 @@
                     <ImageView
                         android:layout_width="110dp"
                         android:layout_height="110dp"
-                        android:src="@drawable/dog1"
+                        android:src="@drawable/image_dog1"
                         android:scaleType="centerCrop"
                         android:contentDescription="강아지1" />
 
@@ -154,7 +175,7 @@
                     <ImageView
                         android:layout_width="110dp"
                         android:layout_height="110dp"
-                        android:src="@drawable/dog2"
+                        android:src="@drawable/image_dog2"
                         android:scaleType="centerCrop"
                         android:contentDescription="강아지2" />
 
@@ -173,7 +194,7 @@
                     <ImageView
                         android:layout_width="110dp"
                         android:layout_height="110dp"
-                        android:src="@drawable/dog3"
+                        android:src="@drawable/image_dog3"
                         android:scaleType="centerCrop"
                         android:contentDescription="강아지3" />
 
@@ -195,8 +216,10 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="반려동물을 위한 행사와 정책!"
+                    android:textColor="@color/black"
+                    android:paddingStart="10dp"
                     android:textStyle="bold"
-                    android:textSize="18sp" />
+                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/morePolicy"
@@ -204,7 +227,8 @@
                     android:layout_height="wrap_content"
                     android:text="더보기 >"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
+                    android:paddingEnd="15dp"
+                    android:textSize="14dp"
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>
@@ -214,24 +238,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="64dp"
+                android:layout_marginBottom="50dp"
                 android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/event_button"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="행사 반려동물과 함께 하는 PET Festival"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:elevation="8dp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/box_event_button"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="행사 반려동물과 함께 하는 PET Festival"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:elevation="8dp" />
         </LinearLayout>
     </ScrollView>
 
     <!-- 하단 네비게이션 -->
     <include
-        layout="@layout/bottom_nav"
+        layout="@layout/section_bottom_nav"
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />

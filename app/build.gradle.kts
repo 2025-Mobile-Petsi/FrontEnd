@@ -40,7 +40,8 @@ android {
 }
 
 dependencies {
-
+    //gps 관련
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
     //지도 관련
     implementation("com.naver.maps:map-sdk:3.21.0")
     //밑에 두 개는 날씨 관련

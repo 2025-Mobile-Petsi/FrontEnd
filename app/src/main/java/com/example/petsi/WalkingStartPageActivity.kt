@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -13,7 +14,13 @@ import com.example.petsi.weather.GpsConverter
 import com.example.petsi.weather.RetrofitInstance
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
+
+import android.util.Base64
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class WalkingStartPageActivity : AppCompatActivity() {
 
@@ -42,31 +49,51 @@ class WalkingStartPageActivity : AppCompatActivity() {
         binding = ActivityWalkingStartPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.d(TAG, "onCreate 시작됨")
+        getKeyHash()
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"))
         val dateFormat = SimpleDateFormat("M월 d일 (E)", Locale.KOREAN)
         val timeFormat = SimpleDateFormat("a h:mm", Locale.KOREAN)
         binding.weatherSection.textDate.text = dateFormat.format(calendar.time)
-        binding.weatherSection.textTime.text = getString(R.string.text_time, timeFormat.format(calendar.time))
+        binding.weatherSection.textTime.text = "현재 시각 : ${timeFormat.format(calendar.time)}"
 
         binding.toolbar.logoHome.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            })
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
-        }
-
-        val intentHandler: () -> Unit = {
-            val intent = Intent(this, WalkingWithMapActivity::class.java)
-            val weatherText = skyToText(cachedWeather?.sky)
-            intent.putExtra("weather", weatherText)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
-        binding.walkingState.emptyGo.setOnClickListener { intentHandler() }
-        binding.buttonStartWalking.setOnClickListener { intentHandler() }
+        binding.walkingState.emptyGo.setOnClickListener {
+            val intent = Intent(this,activity_walking_with_map::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+        }
+
+        binding.walkingState.emptyGo.setOnClickListener {
+            val intent = Intent(this, activity_walking_with_map::class.java)
+
+            // ✅ 동일하게 날씨 전달
+            val weatherText = skyToText(cachedWeather?.sky)
+            intent.putExtra("weather", weatherText)
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+        }
+
+        binding.buttonStartWalking.setOnClickListener {
+            val intent = Intent(this, activity_watching_map::class.java)
+
+            // ✅ 날씨 정보 동적으로 sky 코드 -> 텍스트 변환 후 전달
+            val weatherText = skyToText(cachedWeather?.sky)
+            intent.putExtra("weather", weatherText)
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+        }
 
         binding.bottomNav.bottomNavigationView.selectedItemId = R.id.nav_walk
+
         binding.bottomNav.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -84,7 +111,8 @@ class WalkingStartPageActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val (baseDate, baseTime) = getBaseDateTime()
-        if (cachedWeather?.baseDate == baseDate && cachedWeather?.baseTime == baseTime) {
+
+        if (cachedWeather != null && cachedWeather?.baseDate == baseDate && cachedWeather?.baseTime == baseTime) {
             displayCachedWeather()
         } else {
             loadWeather(baseDate, baseTime)
@@ -97,9 +125,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
     }
 
     private fun loadWeather(baseDate: String, baseTime: String) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1000)
             return
         }
@@ -107,14 +133,16 @@ class WalkingStartPageActivity : AppCompatActivity() {
         binding.weatherSection.root.visibility = View.GONE
         binding.weatherLoadingLayout.root.visibility = View.VISIBLE
 
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(1000)
-            .build()
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 1000
+            numUpdates = 1
+        }
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 val location = result.lastLocation ?: return
+
                 val geocoder = Geocoder(this@WalkingStartPageActivity, Locale.KOREAN)
                 val finalRegion = try {
                     val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
@@ -126,6 +154,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
                 }
 
                 val grid = GpsConverter.toGrid(location.latitude, location.longitude)
+
                 RetrofitInstance.api.getVillageForecast(
                     serviceKey = API_KEY,
                     numOfRows = 1000,
@@ -142,16 +171,23 @@ class WalkingStartPageActivity : AppCompatActivity() {
                     ) {
                         if (response.isSuccessful) {
                             val items = response.body()?.response?.body?.items?.item
+                            val temp = items?.find { it.category == "TMP" }?.fcstValue ?: "-"
+                            val sky = items?.find { it.category == "SKY" }?.fcstValue ?: "-"
+                            val pop = items?.find { it.category == "POP" }?.fcstValue ?: "-"
+                            val tmx = items?.find { it.category == "TMX" }?.fcstValue ?: "-"
+                            val tmn = items?.find { it.category == "TMN" }?.fcstValue ?: "-"
+
                             cachedWeather = WeatherCache(
                                 region = finalRegion,
                                 baseDate = baseDate,
                                 baseTime = baseTime,
-                                temp = items?.find { it.category == "TMP" }?.fcstValue ?: "-",
-                                sky = items?.find { it.category == "SKY" }?.fcstValue ?: "-",
-                                pop = items?.find { it.category == "POP" }?.fcstValue ?: "-",
-                                tmx = items?.find { it.category == "TMX" }?.fcstValue ?: "-",
-                                tmn = items?.find { it.category == "TMN" }?.fcstValue ?: "-"
+                                temp = temp,
+                                sky = sky,
+                                pop = pop,
+                                tmx = tmx,
+                                tmn = tmn
                             )
+
                             displayCachedWeather()
                         } else {
                             binding.weatherLoadingLayout.root.visibility = View.GONE
@@ -175,12 +211,12 @@ class WalkingStartPageActivity : AppCompatActivity() {
 
     private fun displayCachedWeather() {
         val data = cachedWeather ?: return
-        binding.weatherSection.textRegion.text = getString(R.string.text_region, data.region)
-        binding.weatherSection.textTemp.text = getString(R.string.text_temperature, data.temp)
-        binding.weatherSection.textSky.text = getString(R.string.text_sky, skyToText(data.sky))
-        binding.weatherSection.textTmx.text = getString(R.string.text_tmx, data.tmx)
-        binding.weatherSection.textTmn.text = getString(R.string.text_tmn, data.tmn)
-        binding.weatherSection.textPop.text = getString(R.string.text_pop, data.pop)
+        binding.weatherSection.textRegion.text = "현재 지역 : ${data.region}"
+        binding.weatherSection.textTemp.text = "현재 온도 : ${data.temp}°C"
+        binding.weatherSection.textSky.text = "날씨 : ${skyToText(data.sky)}"
+        binding.weatherSection.textTmx.text = "최고 : ${data.tmx}°C"
+        binding.weatherSection.textTmn.text = "최저 : ${data.tmn}°C"
+        binding.weatherSection.textPop.text = "강수 확률 : ${data.pop}%"
         binding.weatherLoadingLayout.root.visibility = View.GONE
         binding.weatherSection.root.visibility = View.VISIBLE
     }
@@ -210,4 +246,21 @@ class WalkingStartPageActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
     }
+
+
+    private fun getKeyHash() {
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+            val signatures = packageInfo.signingInfo.apkContentsSigners
+            for (signature in signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val keyHash = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
+                Log.d("KeyHash", "키 해시: $keyHash")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

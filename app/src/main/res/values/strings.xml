@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">petsi</string>
     <string name="walk_duration">%1$d분 %2$d초 경과</string>
-    <string name="walk_distance">%1$d미터</string>
+    <string name="text_region">%1$s</string>">
+    <string name="walk_temperature">%1$d°C</string>">
+    <string name="text_sky">%1$s</string>">
+    <string name="text_tmx">%1$d미터</string>
+    <string name="text_tmn">%1$d미터</string>
+    <string name="text_temperature">%1$d미터</string>
+    <string name="text_pop">%1$d미터</string>
+    <string name="text_time">%1$d미터</string>
+
 </resources>

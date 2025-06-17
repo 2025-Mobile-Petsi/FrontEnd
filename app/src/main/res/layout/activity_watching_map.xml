@@ -160,7 +160,7 @@
     <!-- ✅ 하단 네비게이션 바 -->
     <include
         android:id="@+id/bottomNavigationView"
-        layout="@layout/bottom_nav"
+        layout="@layout/section_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

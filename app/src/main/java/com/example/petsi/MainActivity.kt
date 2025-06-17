@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         // 3. 지도 보기 버튼 → MapFilteringActivity
         binding.btnSeeMap.setOnClickListener {
-            val intent = Intent(this, MapFilteringActivity::class.java)
+            val intent = Intent(this, activity_watching_map::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_map -> {
-                    val intent = Intent(this, MapFilteringActivity::class.java)
+                    val intent = Intent(this, activity_watching_map::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     startActivity(intent)
                     overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)

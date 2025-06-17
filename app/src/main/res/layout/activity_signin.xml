@@ -13,7 +13,7 @@
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:layout_marginBottom="12dp"
-        android:src="@drawable/petsi_logo"
+        android:src="@drawable/image_main_logo"
         android:scaleType="fitCenter"
         android:contentDescription="로고"
         app:layout_constraintBottom_toTopOf="@id/loginBox"
@@ -144,6 +144,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <include layout="@layout/bottom_nav" />
+        <include layout="@layout/section_bottom_nav" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivitySigninBinding
 
-class activity_signin : AppCompatActivity() {
+class activitysignin : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigninBinding
 

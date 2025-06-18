@@ -7,7 +7,6 @@
     <!--현재 위치(GPS) 가져오기-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -38,6 +37,11 @@
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
             android:value="k23b2ztztk" />
+        <!-- ✅ 구글 장소 필터링 API 키 -->
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="너의_API_KEY" />
+
     </application>
 
 </manifest>

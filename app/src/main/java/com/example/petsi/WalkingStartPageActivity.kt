@@ -50,7 +50,6 @@ class WalkingStartPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Log.d(TAG, "onCreate 시작됨")
-        getKeyHash()
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"))
         val dateFormat = SimpleDateFormat("M월 d일 (E)", Locale.KOREAN)
         val timeFormat = SimpleDateFormat("a h:mm", Locale.KOREAN)
@@ -65,7 +64,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
         }
 
         binding.walkingState.emptyGo.setOnClickListener {
-            val intent = Intent(this,activity_walking_with_map::class.java)
+            val intent = Intent(this, activity_walking_with_map::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
@@ -246,21 +245,4 @@ class WalkingStartPageActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
     }
-
-
-    private fun getKeyHash() {
-        try {
-            val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            val signatures = packageInfo.signingInfo.apkContentsSigners
-            for (signature in signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                val keyHash = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
-                Log.d("KeyHash", "키 해시: $keyHash")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
 }

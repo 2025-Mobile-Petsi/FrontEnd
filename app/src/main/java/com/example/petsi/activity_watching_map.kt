@@ -57,11 +57,11 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             searchPlaces("음식점", "food")
         }
 
-        findViewById<Button>(R.id.btnVet).setOnClickListener {
+        findViewById<Button>(R.id.btn_vet).setOnClickListener {
             searchPlaces("동물병원", "vet")
         }
 
-        findViewById<Button>(R.id.btnPark).setOnClickListener {
+        findViewById<Button>(R.id.btn_park).setOnClickListener {
             searchPlaces("공원", "park")
         }
 

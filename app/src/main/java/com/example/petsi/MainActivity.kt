@@ -14,56 +14,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. 상단 로고 클릭 시 새로고침 (전환 애니메이션 제거)
+        // 상단 로고 클릭 시 새로고침
         binding.toolbar.logoHome.setOnClickListener {
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)  // 👉 전환 시작 애니메이션
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
             recreate()
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)  // 👉 recreate 후 적용 애니메이션
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
-        // 2. 산책하기 버튼 → WalkingStartPageActivity
+        // 산책하기 버튼 → WalkingStartPageActivity 이동
         binding.mainGoWalking.setOnClickListener {
             val intent = Intent(this, WalkingStartPageActivity::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
-        // 3. 지도 보기 버튼 → MapFilteringActivity
+        // 지도 보기 버튼 → activity_watching_map 이동
         binding.btnSeeMap.setOnClickListener {
             val intent = Intent(this, activity_watching_map::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
-
-        // 4. 하단 네비게이션
-        binding.bottomNav.bottomNavigationView.selectedItemId = R.id.nav_home
-        binding.bottomNav.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> true
-
-                R.id.nav_walk -> {
-                    val intent = Intent(this, WalkingStartPageActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    startActivity(intent)
-                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
-                    true
-                }
-
-                R.id.nav_map -> {
-                    val intent = Intent(this, activity_watching_map::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    startActivity(intent)
-                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
-                    true
-                }
-
-                else -> false
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.bottomNav.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 }

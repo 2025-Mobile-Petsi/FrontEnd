@@ -77,7 +77,7 @@ class activity_signup : AppCompatActivity() {
 
         // ✅ 로그인(Sign In) 버튼 누르면 initial 화면으로 이동
         binding.btnSignIn.setOnClickListener {
-            val intent = Intent(this, activity_signin::class.java)
+            val intent = Intent(this, activitysignin::class.java)
             startActivity(intent)
             finish()
         }

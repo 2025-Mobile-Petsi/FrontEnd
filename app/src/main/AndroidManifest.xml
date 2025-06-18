@@ -20,6 +20,7 @@
         <activity
             android:name=".activity_watching_map"
             android:exported="false" />
+
         <!-- ✅ MainActivity를 앱 시작 액티비티로 설정 -->
         <activity
             android:name=".MainActivity"
@@ -30,6 +31,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--산책하기 화면-->
+        <activity
+            android:name=".WalkingStartPageActivity"
+            android:exported="false"/>
+        <!--산책 시작-->
         <activity
             android:name=".activity_walking_with_map"
             android:exported="false" />

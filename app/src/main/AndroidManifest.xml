@@ -7,6 +7,7 @@
     <!--현재 위치(GPS) 가져오기-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -40,6 +41,14 @@
         <activity
             android:name=".activity_walking_with_map"
             android:exported="false" />
+        <!--산책 결과 화면-->
+        <activity android:name=".WalkResultActivity" />
+
+        <!--로그인 페이지-->
+        <activity
+            android:name=".activitysignin"
+            android:exported="false" />
+
         <!-- ✅ 네이버 지도 API 키 -->
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
@@ -47,7 +56,7 @@
         <!-- ✅ 구글 장소 필터링 API 키 -->
         <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="너의_API_KEY" />
+        android:value="AIzaSyBJQf641ng07ZFAANR894VKImePUfvA04I" />
 
     </application>
 

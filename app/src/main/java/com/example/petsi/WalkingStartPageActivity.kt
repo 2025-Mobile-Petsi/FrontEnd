@@ -18,10 +18,6 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-import android.util.Base64
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-
 class WalkingStartPageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWalkingStartPageBinding
@@ -50,6 +46,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Log.d(TAG, "onCreate 시작됨")
+
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"))
         val dateFormat = SimpleDateFormat("M월 d일 (E)", Locale.KOREAN)
         val timeFormat = SimpleDateFormat("a h:mm", Locale.KOREAN)
@@ -65,28 +62,16 @@ class WalkingStartPageActivity : AppCompatActivity() {
 
         binding.walkingState.emptyGo.setOnClickListener {
             val intent = Intent(this, activity_walking_with_map::class.java)
-            startActivity(intent)
-            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
-        }
-
-        binding.walkingState.emptyGo.setOnClickListener {
-            val intent = Intent(this, activity_walking_with_map::class.java)
-
-            // ✅ 동일하게 날씨 전달
             val weatherText = skyToText(cachedWeather?.sky)
             intent.putExtra("weather", weatherText)
-
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
         binding.buttonStartWalking.setOnClickListener {
             val intent = Intent(this, activity_watching_map::class.java)
-
-            // ✅ 날씨 정보 동적으로 sky 코드 -> 텍스트 변환 후 전달
             val weatherText = skyToText(cachedWeather?.sky)
             intent.putExtra("weather", weatherText)
-
             startActivity(intent)
             overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
@@ -110,27 +95,36 @@ class WalkingStartPageActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val (baseDate, baseTime) = getBaseDateTime()
+        Log.d(TAG, "baseDate=$baseDate, baseTime=$baseTime")
 
         if (cachedWeather != null && cachedWeather?.baseDate == baseDate && cachedWeather?.baseTime == baseTime) {
+            Log.d(TAG, "캐시된 날씨 사용됨")
             displayCachedWeather()
         } else {
+            Log.d(TAG, "새로 날씨 로딩 시도")
             loadWeather(baseDate, baseTime)
         }
 
         binding.weatherSection.textRefresh.setOnClickListener {
             val (refreshDate, refreshTime) = getBaseDateTime()
+            Log.d(TAG, "날씨 새로고침 요청: $refreshDate / $refreshTime")
             loadWeather(refreshDate, refreshTime)
         }
     }
 
     private fun loadWeather(baseDate: String, baseTime: String) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.d(TAG, "loadWeather 호출됨 (baseDate=$baseDate, baseTime=$baseTime)")
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "위치 권한 없음 → 요청")
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1000)
             return
         }
 
         binding.weatherSection.root.visibility = View.GONE
         binding.weatherLoadingLayout.root.visibility = View.VISIBLE
+        Log.d(TAG, "날씨 UI: 로딩 화면 표시 시작")
 
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -140,7 +134,13 @@ class WalkingStartPageActivity : AppCompatActivity() {
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
-                val location = result.lastLocation ?: return
+                val location = result.lastLocation
+                if (location == null) {
+                    Log.e(TAG, "위치 정보가 null")
+                    return
+                }
+
+                Log.d(TAG, "위치 수신 성공: (${location.latitude}, ${location.longitude})")
 
                 val geocoder = Geocoder(this@WalkingStartPageActivity, Locale.KOREAN)
                 val finalRegion = try {
@@ -149,10 +149,12 @@ class WalkingStartPageActivity : AppCompatActivity() {
                         address.subLocality ?: address.thoroughfare ?: address.locality ?: address.adminArea ?: "알 수 없음"
                     } ?: "알 수 없음"
                 } catch (e: Exception) {
+                    Log.e(TAG, "Geocoder 실패: ${e.message}")
                     "알 수 없음"
                 }
 
                 val grid = GpsConverter.toGrid(location.latitude, location.longitude)
+                Log.d(TAG, "격자 좌표 변환 완료: (${grid.x}, ${grid.y})")
 
                 RetrofitInstance.api.getVillageForecast(
                     serviceKey = API_KEY,
@@ -168,6 +170,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
                         call: retrofit2.Call<com.example.petsi.model.WeatherResponse>,
                         response: retrofit2.Response<com.example.petsi.model.WeatherResponse>
                     ) {
+                        Log.d(TAG, "날씨 응답 수신 완료 (성공=${response.isSuccessful})")
                         if (response.isSuccessful) {
                             val items = response.body()?.response?.body?.items?.item
                             val temp = items?.find { it.category == "TMP" }?.fcstValue ?: "-"
@@ -175,6 +178,8 @@ class WalkingStartPageActivity : AppCompatActivity() {
                             val pop = items?.find { it.category == "POP" }?.fcstValue ?: "-"
                             val tmx = items?.find { it.category == "TMX" }?.fcstValue ?: "-"
                             val tmn = items?.find { it.category == "TMN" }?.fcstValue ?: "-"
+
+                            Log.d(TAG, "날씨 파싱 완료 TMP=$temp SKY=$sky POP=$pop TMX=$tmx TMN=$tmn")
 
                             cachedWeather = WeatherCache(
                                 region = finalRegion,
@@ -189,6 +194,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
 
                             displayCachedWeather()
                         } else {
+                            Log.e(TAG, "날씨 응답 실패: code=${response.code()}, body=${response.errorBody()?.string()}")
                             binding.weatherLoadingLayout.root.visibility = View.GONE
                             binding.weatherSection.root.visibility = View.GONE
                         }
@@ -198,6 +204,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
                         call: retrofit2.Call<com.example.petsi.model.WeatherResponse>,
                         t: Throwable
                     ) {
+                        Log.e(TAG, "날씨 API 호출 실패: ${t.message}")
                         binding.weatherLoadingLayout.root.visibility = View.GONE
                         binding.weatherSection.root.visibility = View.GONE
                     }
@@ -206,10 +213,12 @@ class WalkingStartPageActivity : AppCompatActivity() {
         }
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, mainLooper)
+        Log.d(TAG, "위치 요청 전송 완료")
     }
 
     private fun displayCachedWeather() {
         val data = cachedWeather ?: return
+        Log.d(TAG, "displayCachedWeather 호출: region=${data.region}")
         binding.weatherSection.textRegion.text = "현재 지역 : ${data.region}"
         binding.weatherSection.textTemp.text = "현재 온도 : ${data.temp}°C"
         binding.weatherSection.textSky.text = "날씨 : ${skyToText(data.sky)}"

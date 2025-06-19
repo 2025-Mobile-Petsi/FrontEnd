@@ -29,7 +29,7 @@
     <!-- ✅ 아래 덮개: 하단을 덮어서 아래 구분선 안 보이게 -->
     <item android:top="99dp">
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/white" />
+            <solid android:color="@android:color/transparent" />
         </shape>
     </item>
 

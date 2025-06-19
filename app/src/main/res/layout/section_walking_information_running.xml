@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
 
 
 
@@ -136,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_green_button"
-                android:text="산책 종료하기"
+                android:text="산책 시작하기"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:textStyle="bold"

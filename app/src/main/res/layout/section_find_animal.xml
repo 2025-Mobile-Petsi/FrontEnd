@@ -48,109 +48,272 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <!-- ✅ 카드 반복 구조 -->
             <!-- 카드 1 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                android:gravity="center">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지1"
-                    android:src="@drawable/image_dog1"
-                    android:scaleType="centerCrop" />
+                    android:background="@drawable/box_find_animal">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_dog1"
+                        android:contentDescription="강아지1"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom|center_horizontal"
+                        android:padding="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="꾸미"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="여 5세"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <!-- 카드 2 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                android:gravity="center">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지2"
-                    android:src="@drawable/image_dog2"
-                    android:scaleType="centerCrop" />
+                    android:background="@drawable/box_find_animal">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_dog2"
+                        android:contentDescription="강아지2"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom|center_horizontal"
+                        android:padding="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="꼬미"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="남 나이 불명"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <!-- 카드 3 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                android:gravity="center">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지3"
-                    android:src="@drawable/image_dog3"
-                    android:scaleType="centerCrop" />
-            </LinearLayout>
+                    android:background="@drawable/box_find_animal">
 
-            <!-- 추가 카드 예시 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_dog3"
+                        android:contentDescription="강아지3"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom|center_horizontal"
+                        android:padding="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="까미"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="남 3세"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+            <!-- 카드 4 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                android:gravity="center">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지4"
-                    android:src="@drawable/image_dog1"
-                    android:scaleType="centerCrop" />
-            </LinearLayout>
+                    android:background="@drawable/box_find_animal">
 
-            <!-- 추가 카드 예시 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_dog3"
+                        android:contentDescription="강아지3"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom|center_horizontal"
+                        android:padding="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="까미"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="남 3세"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+            <!-- 카드 5 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                android:gravity="center">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지4"
-                    android:src="@drawable/image_dog1"
-                    android:scaleType="centerCrop" />
-            </LinearLayout>
+                    android:background="@drawable/box_find_animal">
 
-            <!-- 추가 카드 예시 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_margin="4dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_dog3"
+                        android:contentDescription="강아지3"/>
 
-                <ImageView
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="강아지4"
-                    android:src="@drawable/image_dog1"
-                    android:scaleType="centerCrop" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom|center_horizontal"
+                        android:padding="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="까미"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="남 3세"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="2"/>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
     </HorizontalScrollView>
+
 
 </LinearLayout>

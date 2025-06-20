@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.network.ApiClient
+import com.example.petsi.network.walklog.model.request.WalkLogEndRequest
 import com.example.petsi.network.walklog.model.request.WalkLogStartRequest
 import com.example.petsi.network.walklog.model.response.WalkLogResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,6 +37,8 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     private var accumulatedDistance = 0.0
     private var lastLocation: Location? = null
     private val pathCoords = mutableListOf<LatLng>()
+    private var walkLogId: Long = -1L
+    private var startTimeStr: String?= null
 
     private val handler = Handler(Looper.getMainLooper())
     private val updateRunnable = object : Runnable {
@@ -183,14 +186,24 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
                         handler.post(updateRunnable)
 
-                        val userId = 1L
+                        val userId = 1L // 회원가입 완료되면 그에 따른 함수로 변경해야함
                         val request = WalkLogStartRequest(userId)
+
+                        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA)
+                        formatter.timeZone = TimeZone.getTimeZone("Asia/Seoul") // ✅ 한국 시간대로 설정
+
+                        val displayFormat = SimpleDateFormat("HH:mm", Locale.KOREA)
+                        displayFormat.timeZone = TimeZone.getTimeZone("Asia/Seoul")
 
                         ApiClient.walkLogApiService.startWalkLog(request)
                             .enqueue(object : Callback<WalkLogResponse> {
                                 override fun onResponse(call: Call<WalkLogResponse>, response: Response<WalkLogResponse>) {
                                     if (response.isSuccessful) {
                                         val result = response.body()
+                                        walkLogId = result?.walkLogId ?: -1L
+                                        startTimeStr  = result?.startTime?.let {
+                                            displayFormat.format(formatter.parse(it)!!)
+                                        } ?: ""
                                         Log.d("WalkStart", "✅ 산책 시작 성공: walkLogId=${result?.walkLogId}")
                                         // 필요 시 walkLogId 저장
                                     } else {
@@ -214,11 +227,36 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         handler.removeCallbacks(updateRunnable)
                         btnStartEnd.text = "산책 시작하기"
 
+                        Log.d("WalkEnd", "보낼 id=$walkLogId")
+
                         val endTime = System.currentTimeMillis()
+                        val endTimeStr         = SimpleDateFormat(
+                            "yyyy-MM-dd'T'HH:mm:ss",
+                            Locale.KOREA
+                        ).format(Date(endTime))
                         val totalDurationMin = (endTime - startTime) / 1000 / 60
                         val formattedStartTime = SimpleDateFormat("HH:mm", Locale.KOREA).format(Date(startTime))
                         val formattedEndTime = SimpleDateFormat("HH:mm", Locale.KOREA).format(Date(endTime))
                         val formattedDistance = String.format("%.1f km", accumulatedDistance / 1000.0)
+
+                        if (walkLogId != -1L) {
+                            val reqEnd = WalkLogEndRequest(
+                                endTime = endTimeStr,
+                                distance = accumulatedDistance / 1000.0,
+                                weather = "정보 없음"           // 필요 시 날씨 값으로 교체
+                            )
+
+                        ApiClient.walkLogApiService.endWalkLog(walkLogId, reqEnd)
+                            .enqueue(object : Callback<WalkLogResponse> {
+                                override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
+                                    if (r.isSuccessful) Log.d("WalkEnd","종료 성공")
+                                    else Log.e("WalkEnd","종료 실패 ${r.code()}")
+                                }
+                                override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
+                                    Log.e("WalkEnd","요청 오류 ${t.message}")
+                                }
+                            })
+                    }
 
                         showResultLayout(formattedStartTime, formattedEndTime, "${totalDurationMin}분", formattedDistance)
                     }

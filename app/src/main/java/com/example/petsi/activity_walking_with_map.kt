@@ -10,6 +10,9 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.petsi.network.ApiClient
+import com.example.petsi.network.walklog.model.request.WalkLogStartRequest
+import com.example.petsi.network.walklog.model.response.WalkLogResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -18,6 +21,9 @@ import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import java.text.SimpleDateFormat
 import java.util.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
@@ -176,7 +182,28 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         pathOverlay.outlineWidth = 3
 
                         handler.post(updateRunnable)
+
+                        val userId = 1L
+                        val request = WalkLogStartRequest(userId)
+
+                        ApiClient.walkLogApiService.startWalkLog(request)
+                            .enqueue(object : Callback<WalkLogResponse> {
+                                override fun onResponse(call: Call<WalkLogResponse>, response: Response<WalkLogResponse>) {
+                                    if (response.isSuccessful) {
+                                        val result = response.body()
+                                        Log.d("WalkStart", "✅ 산책 시작 성공: walkLogId=${result?.walkLogId}")
+                                        // 필요 시 walkLogId 저장
+                                    } else {
+                                        Log.e("WalkStart", "❌ 응답 실패: ${response.code()} / ${response.errorBody()?.string()}")
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<WalkLogResponse>, t: Throwable) {
+                                    Log.e("WalkStart", "❌ 요청 실패: ${t.message}")
+                                }
+                            })
                     }
+
                     .setNegativeButton("취소", null)
                     .show()
             } else {

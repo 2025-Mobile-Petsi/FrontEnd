@@ -18,6 +18,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
+
 class WalkingStartPageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWalkingStartPageBinding

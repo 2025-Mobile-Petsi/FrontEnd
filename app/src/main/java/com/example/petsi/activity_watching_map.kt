@@ -178,11 +178,11 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getIconForCategory(category: String): OverlayImage {
         return when (category) {
-            "cafe" -> OverlayImage.fromResource(R.drawable.ic_cafe)
-            "food" -> OverlayImage.fromResource(R.drawable.ic_food)
-            "vet" -> OverlayImage.fromResource(R.drawable.ic_vet)
-            "park" -> OverlayImage.fromResource(R.drawable.ic_park)
-            else -> OverlayImage.fromResource(R.drawable.ic_parking)
+            "cafe" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+            "food" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+            "vet" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+            "park" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+            else -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
         }
     }
 }

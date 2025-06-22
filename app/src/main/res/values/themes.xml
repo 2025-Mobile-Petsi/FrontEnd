@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Petsi" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- ✅ 전체 폰트 지정 -->
-        <item name="android:fontFamily">@font/cutefont_regular</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
 
         <!-- 기타 항목들 필요시 추가 -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->

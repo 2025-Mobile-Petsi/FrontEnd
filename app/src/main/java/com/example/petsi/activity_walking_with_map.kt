@@ -38,7 +38,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     private var lastLocation: Location? = null
     private val pathCoords = mutableListOf<LatLng>()
     private var walkLogId: Long = -1L
-    private var startTimeStr: String?= null
+    private var startTimeStr: String? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private val updateRunnable = object : Runnable {
@@ -54,7 +54,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_walking_with_map)
 
-        // 지도 초기화
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as MapFragment?
             ?: MapFragment.newInstance().also {
                 supportFragmentManager.beginTransaction().add(R.id.map_fragment, it).commit()
@@ -63,7 +62,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
         locationSource = FusedLocationSource(this, 1000)
 
-        // GPS 버튼
         findViewById<ImageView>(R.id.btn_gps).setOnClickListener {
             if (::naverMap.isInitialized) {
                 val coord = naverMap.locationOverlay.position
@@ -71,7 +69,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // 상단 로고 → 홈 전환
         findViewById<ImageView>(R.id.logo_home).setOnClickListener {
             confirmExitDuringWalk {
                 val intent = Intent(this, MainActivity::class.java)
@@ -81,7 +78,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // 하단 네비게이션 처리
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNav.selectedItemId = R.id.nav_walk
 
@@ -186,28 +182,13 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
                         handler.post(updateRunnable)
 
-                        val userId = 1L // 회원가입 완료되면 그에 따른 함수로 변경해야함
-                        val request = WalkLogStartRequest(userId)
-
-                        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA)
-                        formatter.timeZone = TimeZone.getTimeZone("Asia/Seoul") // ✅ 한국 시간대로 설정
-
-                        val displayFormat = SimpleDateFormat("HH:mm", Locale.KOREA)
-                        displayFormat.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+                        val request = WalkLogStartRequest(userId = 1L)
 
                         ApiClient.walkLogApiService.startWalkLog(request)
                             .enqueue(object : Callback<WalkLogResponse> {
                                 override fun onResponse(call: Call<WalkLogResponse>, response: Response<WalkLogResponse>) {
                                     if (response.isSuccessful) {
-                                        val result = response.body()
-                                        walkLogId = result?.walkLogId ?: -1L
-                                        startTimeStr  = result?.startTime?.let {
-                                            displayFormat.format(formatter.parse(it)!!)
-                                        } ?: ""
-                                        Log.d("WalkStart", "✅ 산책 시작 성공: walkLogId=${result?.walkLogId}")
-                                        // 필요 시 walkLogId 저장
-                                    } else {
-                                        Log.e("WalkStart", "❌ 응답 실패: ${response.code()} / ${response.errorBody()?.string()}")
+                                        walkLogId = response.body()?.walkLogId ?: -1L
                                     }
                                 }
 
@@ -216,7 +197,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                                 }
                             })
                     }
-
                     .setNegativeButton("취소", null)
                     .show()
             } else {
@@ -227,13 +207,8 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         handler.removeCallbacks(updateRunnable)
                         btnStartEnd.text = "산책 시작하기"
 
-                        Log.d("WalkEnd", "보낼 id=$walkLogId")
-
                         val endTime = System.currentTimeMillis()
-                        val endTimeStr         = SimpleDateFormat(
-                            "yyyy-MM-dd'T'HH:mm:ss",
-                            Locale.KOREA
-                        ).format(Date(endTime))
+                        val endTimeStr = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA).format(Date(endTime))
                         val totalDurationMin = (endTime - startTime) / 1000 / 60
                         val formattedStartTime = SimpleDateFormat("HH:mm", Locale.KOREA).format(Date(startTime))
                         val formattedEndTime = SimpleDateFormat("HH:mm", Locale.KOREA).format(Date(endTime))
@@ -243,20 +218,20 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                             val reqEnd = WalkLogEndRequest(
                                 endTime = endTimeStr,
                                 distance = accumulatedDistance / 1000.0,
-                                weather = "정보 없음"           // 필요 시 날씨 값으로 교체
+                                weather = "정보 없음"
                             )
 
-                        ApiClient.walkLogApiService.endWalkLog(walkLogId, reqEnd)
-                            .enqueue(object : Callback<WalkLogResponse> {
-                                override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
-                                    if (r.isSuccessful) Log.d("WalkEnd","종료 성공")
-                                    else Log.e("WalkEnd","종료 실패 ${r.code()}")
-                                }
-                                override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
-                                    Log.e("WalkEnd","요청 오류 ${t.message}")
-                                }
-                            })
-                    }
+                            ApiClient.walkLogApiService.endWalkLog(walkLogId, reqEnd)
+                                .enqueue(object : Callback<WalkLogResponse> {
+                                    override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
+                                        if (r.isSuccessful) Log.d("WalkEnd", "종료 성공")
+                                    }
+
+                                    override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
+                                        Log.e("WalkEnd", "요청 오류 ${t.message}")
+                                    }
+                                })
+                        }
 
                         showResultLayout(formattedStartTime, formattedEndTime, "${totalDurationMin}분", formattedDistance)
                     }
@@ -271,13 +246,28 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         container.removeAllViews()
         layoutInflater.inflate(R.layout.section_walking_information_result, container, true)
 
-        findViewById<TextView?>(R.id.startTime)?.text = start
-        findViewById<TextView?>(R.id.endTime)?.text = end
-        findViewById<TextView?>(R.id.totalTime)?.text = total
-        findViewById<TextView?>(R.id.totalDistance)?.text = distance
+        findViewById<TextView>(R.id.startTime)?.text = start
+        findViewById<TextView>(R.id.endTime)?.text = end
+        findViewById<TextView>(R.id.totalTime)?.text = total
+        findViewById<TextView>(R.id.totalDistance)?.text = distance
+
+        // ✅ 알림창 확인 후 메인으로 이동
+        findViewById<Button>(R.id.btnBackToMain)?.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setMessage("메인으로 이동하시겠습니까?")
+                .setPositiveButton("확인") { _, _ ->
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    finish()
+                }
+                .setNegativeButton("취소", null)
+                .show()
+        }
     }
 
-    // ✅ 산책 중이면 경고 다이얼로그 → 확인 시 실행
+
     private fun confirmExitDuringWalk(onConfirmed: () -> Unit) {
         if (isWalking) {
             AlertDialog.Builder(this)
@@ -294,7 +284,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    // ✅ 뒤로가기 버튼도 제어
     override fun onBackPressed() {
         confirmExitDuringWalk {
             super.onBackPressed()

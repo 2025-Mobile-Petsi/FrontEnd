@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     android:background="@android:color/transparent">
 
     <!-- 🔍 검색 바 -->
@@ -13,8 +14,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/box_walk_record_card"
         android:orientation="horizontal"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:padding="1dp"
         android:elevation="5dp">
 
@@ -45,14 +46,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="12dp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="8dp">
+            android:orientation="horizontal">
 
             <!-- 카테고리 버튼들 -->
             <!---->
@@ -64,6 +64,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="6dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_category_selector"
                 android:clickable="true"
@@ -78,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="음식점"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
@@ -106,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="카페"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
@@ -134,7 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="동물 병원"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
@@ -162,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="공원"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
@@ -190,7 +191,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="주차장"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
@@ -218,11 +219,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="은행"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/btn_hospital"
                 android:layout_width="wrap_content"
@@ -231,7 +233,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="6dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_category_selector"
                 android:clickable="true"
                 android:focusable="true">
@@ -245,7 +247,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="병원"
-                    android:textColor="@color/black"
+                    android:textColor="@color/btn_category_text_color"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp" />

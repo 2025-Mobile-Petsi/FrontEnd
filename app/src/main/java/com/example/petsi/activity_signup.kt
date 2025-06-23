@@ -105,6 +105,16 @@ class activity_signup : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        //회원가입 정보 전달
+        binding.btn_register.setonClickListener {
+            val request = SignUpRequestUser(
+                email = binding.etid.text.toString(),
+                password = binding.etPassword.text.toString(),
+                username =  binding.etname.text.toString(),
+                phoneNumber = binding.et_phone.text.toString()
+            )
+        }
     }
 
     // ✅ 버튼 색상 바꿔주는 함수

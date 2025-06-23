@@ -119,7 +119,7 @@ class activity_signup : AppCompatActivity() {
 
                 // 통신 자체 실패 (서버 연결 오류, 네트워크 문제 등)
                 override fun onFailure(call: Call<ResponseEmail>, t: Throwable) {
-                    Log.e("로그인", "요청 실패: ${t.message}")
+                    Log.e("중복 확인", "요청 실패: ${t.message}")
                 }
             })
         }

@@ -12,6 +12,12 @@ import com.example.petsi.databinding.ActivitySignupBinding
 import android.graphics.Color
 import android.content.res.ColorStateList
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.petsi.app.model.request.VerifyCodeRequest
+import com.example.petsi.app.model.request.SignUpRequestUser
+import com.example.petsi.app.model.response.ResponseUser
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class activity_signup : AppCompatActivity() {
 

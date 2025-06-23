@@ -56,7 +56,7 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         val btnVet = findViewById<LinearLayout>(R.id.btn_vet)
         val btnPark = findViewById<LinearLayout>(R.id.btn_park)
 
-        // ✅ 각 버튼 클릭 시 선택 유지
+        // ✅ 각 버튼 클릭 시 선택
         btnCafe.setOnClickListener {
             updateSelectedCategory(btnCafe)
             searchMultipleKeywords(listOf("카페", "커피", "coffee", "다방"), "cafe")
@@ -140,8 +140,22 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: NaverMap) {
         naverMap = map
-        map.moveCamera(CameraUpdate.scrollTo(LatLng(37.3797, 126.8028)))
+
+        val myLocation = LatLng(37.3514, 126.7426)
+        map.moveCamera(CameraUpdate.scrollTo(myLocation).animate(CameraAnimation.Fly))
+
+        val myMarker = Marker().apply {
+            position = myLocation
+            captionText = "내 위치"
+            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
+            width = 64
+            height = 64
+        }
+
+        myMarker.map = naverMap  // ✅ setter로 할당
+        markerList.add(myMarker)
     }
+
 
     private fun hidePlaceCard() {
         placeCardView.clearAnimation()

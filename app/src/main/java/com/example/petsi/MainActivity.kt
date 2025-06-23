@@ -10,6 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivityMainBinding
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.graphics.Typeface
+import androidx.core.content.ContextCompat
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,5 +76,36 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        val fullText = "행사 | 반려동물과 함께 하는 PET Festival"
+        val spannable = SpannableString(fullText)
+
+// "행사" 부분
+        val mainColor = ContextCompat.getColor(this, R.color.main_color)
+        spannable.setSpan(
+            ForegroundColorSpan(mainColor),
+            0,
+            4,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            0,
+            4,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+
+// 나머지 부분 (3~끝) 파란색
+        val textColor = ContextCompat.getColor(this, R.color.text_color_black)
+        spannable.setSpan(
+            ForegroundColorSpan(textColor),
+            5,
+            fullText.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+// 텍스트뷰에 적용
+        binding.eventBanner.text = spannable
     }
 }

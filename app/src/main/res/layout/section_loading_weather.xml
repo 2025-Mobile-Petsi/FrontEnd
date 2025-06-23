@@ -32,8 +32,7 @@
         android:layout_height="130dp"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/box_walk_record_card"
-        android:elevation="4dp">
+        android:background="@drawable/box_walk_record_card">
 
         <ProgressBar
             android:layout_marginTop="10dp"

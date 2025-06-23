@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/transparent">
-
+    android:orientation="vertical">
 
 
     <!-- ✅ 실제 콘텐츠 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/box_top_rounded_background"
-        android:padding="8dp"
-        >
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <!-- 🟢 산책 정보 카드 3개 -->
         <LinearLayout
             android:id="@+id/infoCardLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:paddingTop="20dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
 
             <!-- 시작 시간 -->
             <FrameLayout
@@ -37,8 +33,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/startTimeLabel"
@@ -46,16 +42,15 @@
                         android:layout_height="wrap_content"
                         android:text="산책 시작 시간"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="13dp"/>
+                        android:textSize="13dp" />
 
                     <TextView
                         android:id="@+id/startTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:textColor="@color/rear_black"
                         android:textSize="20dp"
-                        android:textColor="@color/rear_black"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -69,8 +64,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/durationTimeLabel"
@@ -78,16 +73,15 @@
                         android:layout_height="wrap_content"
                         android:text="산책 진행 시간"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="13dp"/>
+                        android:textSize="13dp" />
 
                     <TextView
                         android:id="@+id/durationTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:textColor="@color/rear_black"
                         android:textSize="20sp"
-                        android:textColor="@color/rear_black"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -101,8 +95,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/distanceLabel"
@@ -110,16 +104,15 @@
                         android:layout_height="wrap_content"
                         android:text="산책 거리"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:textColor="@color/rear_black"
                         android:textSize="20sp"
-                        android:textColor="@color/rear_black"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -128,22 +121,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:gravity="end"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:gravity="end">
 
             <Button
                 android:id="@+id/btnEndWalk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_green_button"
-                android:text="산책 시작하기"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:layout_marginEnd="22dp"
+                android:background="@drawable/btn_rounded_button"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
-                android:layout_marginEnd="22dp" />
+                android:text="산책 시작하기"
+                android:textColor="@android:color/white"
+                android:elevation="0dp"
+                android:stateListAnimator="@null"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

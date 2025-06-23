@@ -1,12 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Petsi" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- ✅ 전체 폰트 지정 -->
-        <item name="android:fontFamily">@font/pretendard_medium</item>
 
-        <!-- 기타 항목들 필요시 추가 -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- ✅ 기존 테마 -->
+    <style name="Base.Theme.Petsi" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="Theme.Petsi" parent="Base.Theme.Petsi" />
+
+    <!-- ✅ Splash 전용 테마 추가 -->
+    <style name="Theme.Petsi.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>

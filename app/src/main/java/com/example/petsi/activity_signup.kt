@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivitySignupBinding
 import android.graphics.Color
 import android.content.res.ColorStateList
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class activity_signup : AppCompatActivity() {
 
@@ -21,7 +22,30 @@ class activity_signup : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+// ✅ 하단 네비게이션 처리
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav.selectedItemId = R.id.nav_map
 
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_walk -> {
+                    startActivity(Intent(this, WalkingStartPageActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_map -> {
+                    startActivity(Intent(this, activity_watching_map ::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                else -> false
+            }
+        }
         // ✅ 버튼 초기 상태 설정 (회색, 비활성화)
         binding.btnVerify.isEnabled = false
         updateButtonColor(binding.btnVerify, false)

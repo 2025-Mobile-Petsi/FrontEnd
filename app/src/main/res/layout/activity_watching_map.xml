@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ✅ 장소 정보 카드뷰 -->
+    <!-- ✅ 장소 정보 카드뷰 (하단 바 위에) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/placeCardView"
         android:layout_width="0dp"
@@ -38,7 +38,7 @@
         android:visibility="gone"
         app:cardCornerRadius="24dp"
         app:cardElevation="12dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toTopOf="@id/navigationBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -80,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="산책 시작 지정"
-                    android:textSize="10dp"
+                    android:textSize="10sp"
                     android:background="@drawable/box_circle_green_border"
                     android:textColor="#4CAF50"
                     android:layout_marginEnd="8dp" />
@@ -97,25 +97,26 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- ✅ 내 위치 버튼 -->
-    <ImageButton
-        android:id="@+id/btnMyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="@null"
-        android:src="@drawable/ic_gps"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <!-- ✅ 하단 네비게이션 바 -->
     <include
-        android:id="@+id/bottomNavigationView"
         layout="@layout/section_bottom_nav"
+        android:id="@+id/navigationBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ✅ 내 위치 버튼: 카드뷰 바로 위 -->
+    <ImageButton
+        android:id="@+id/btnMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@null"
+        android:src="@drawable/ic_gps"
+        app:layout_constraintBottom_toTopOf="@id/placeCardView"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.petsi
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.network.GooglePlacesClient
 import com.example.petsi.network.PlaceResult
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -28,7 +30,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
     private val markerList = mutableListOf<Marker>()
     private val apiKey = "AIzaSyBJQf641ng07ZFAANR894VKImePUfvA04I"
 
-    // UI 요소
     private lateinit var etSearch: EditText
     private lateinit var btnSearch: ImageButton
     private lateinit var btnMyLocation: View
@@ -40,14 +41,12 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_watching_map)
 
-        // 지도 Fragment 설정
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_view) as? MapFragment
             ?: MapFragment.newInstance().also {
                 supportFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
             }
         mapFragment.getMapAsync(this)
 
-        // View 직접 참조
         etSearch = findViewById(R.id.et_search)
         btnSearch = findViewById(R.id.btn_search)
         btnMyLocation = findViewById(R.id.btnMyLocation)
@@ -55,7 +54,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         tvPlaceName = findViewById(R.id.tvPlaceName)
         tvAddress = findViewById(R.id.tvAddress)
 
-        // 카테고리 버튼
         val btnCafe = findViewById<LinearLayout>(R.id.btn_cafe)
         val btnFood = findViewById<LinearLayout>(R.id.btn_food)
         val btnVet = findViewById<LinearLayout>(R.id.btn_vet)
@@ -80,9 +78,41 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        // ✅ 하단 네비게이션 처리
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav.selectedItemId = R.id.nav_map
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_walk -> {
+                    startActivity(Intent(this, WalkingStartPageActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_map -> true
+                else -> false
+            }
+        }
+
         btnMyLocation.setOnClickListener {
             val jeongwang = LatLng(37.3514, 126.7426)
-            naverMap?.moveCamera(CameraUpdate.scrollTo(jeongwang))
+            naverMap?.let { myMap ->
+                myMap.moveCamera(CameraUpdate.scrollTo(jeongwang))
+                val myMarker = Marker().apply {
+                    position = jeongwang
+                    captionText = "내 위치"
+                    icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
+                    width = 64
+                    height = 64
+                    map = myMap
+                }
+                markerList.add(myMarker)
+            }
         }
 
         placeCardView.setOnClickListener {
@@ -149,6 +179,8 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
                                 position = latLng
                                 captionText = place.name
                                 icon = getIconForCategory(category)
+                                width = 64
+                                height = 64
                                 map = naverMap
 
                                 setOnClickListener {
@@ -178,10 +210,10 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getIconForCategory(category: String): OverlayImage {
         return when (category) {
-            "cafe" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
-            "food" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
-            "vet" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
-            "park" -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+            "cafe" -> OverlayImage.fromResource(R.drawable.ic_cafe)
+            "food" -> OverlayImage.fromResource(R.drawable.ic_food)
+            "vet" -> OverlayImage.fromResource(R.drawable.ic_hospital)
+            "park" -> OverlayImage.fromResource(R.drawable.ic_park)
             else -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
         }
     }

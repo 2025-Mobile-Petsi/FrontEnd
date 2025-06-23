@@ -9,6 +9,7 @@ import android.graphics.Color
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivitySigninBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class activitysignin : AppCompatActivity() {
 
@@ -24,7 +25,30 @@ class activitysignin : AppCompatActivity() {
 
         // ✅ 버튼 초기 비활성화 + 회색
         updateLoginButtonState(enabled = false)
+// ✅ 하단 네비게이션 처리
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav.selectedItemId = R.id.nav_map
 
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_walk -> {
+                    startActivity(Intent(this, WalkingStartPageActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_map -> {
+                    startActivity(Intent(this, activity_watching_map ::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                else -> false
+            }
+        }
         // ✅ 텍스트 감지: 한 글자라도 입력하면 활성화
         val watcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {

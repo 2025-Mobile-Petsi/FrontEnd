@@ -11,6 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivitySigninBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+import model.request.LoginRequest
+import model.response.ResponseUser
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 class activitysignin : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigninBinding
@@ -69,6 +75,36 @@ class activitysignin : AppCompatActivity() {
             val intent = Intent(this, activity_signup::class.java)
             startActivity(intent)
             finish()
+        }
+
+        //로그인 기능
+        var login = 0
+        binding.btnLogin.setOnClickListener {
+            // 요청 데이터 생성: 이메일, 비밀번호
+            val request = LoginRequest(
+                email = binding.etId.text.toString(),
+                password = binding.etPassword.text.toString(),
+            )
+
+            api.Login(request).enque(object : Callback<ResponseUser> {
+                // 응답 성공 시 호출
+                override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
+                    if (response.isSuccessful) {
+                        Log.d("로그인 정보 전달", "성공: ${response.body()}")  // 정상 응답 로그 출력
+                        login = 1
+                    } else {
+                        Log.e("로그인 정보 전달", "응답 실패: ${response.code()}")  // 서버 응답 실패 (ex. 400, 500)
+                    }
+                }
+
+                // 통신 자체 실패 (서버 연결 오류, 네트워크 문제 등)
+                override fun onFailure(call: Call<ResponseUser>, t: Throwable) {
+                    Log.e("로그인", "요청 실패: ${t.message}")
+                }
+
+
+            })
+
         }
     }
 

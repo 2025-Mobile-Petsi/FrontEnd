@@ -8,13 +8,15 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.databinding.ActivityMainBinding
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-
+    private var startPoint: LatLng? = null
+    private var endPoint: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

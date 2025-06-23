@@ -38,8 +38,8 @@
         <activity android:name=".activity_watching_map" android:exported="false" />
         <activity android:name=".WalkingStartPageActivity" android:exported="false" />
         <activity android:name=".activity_walking_with_map" android:exported="false" />
-        <activity android:name=".WalkResultActivity" />
         <activity android:name=".activitysignin" android:exported="false" />
+        <activity android:name=".activitysignup" android:exported="false" />
 
         <!-- 지도/검색 API 키 -->
         <meta-data

@@ -113,7 +113,7 @@
                 android:layout_marginStart="8dp"
                 android:textColor="@android:color/white"
                 android:backgroundTint="#4CAF50"
-                android:enabled="false"/>
+                android:enabled="true"/>
         </LinearLayout>
 
         <!-- 인증번호 입력창 (처음엔 안 보임) -->

@@ -5,19 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.TranslateAnimation
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.network.GooglePlacesClient
 import com.example.petsi.network.PlaceResult
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapFragment
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.coroutines.CoroutineScope
@@ -71,6 +65,7 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         btnPark.setOnClickListener {
             searchPlaces("공원", "park")
         }
+
         btnSearch.setOnClickListener {
             val keyword = etSearch.text.toString()
             if (keyword.isNotBlank()) {
@@ -78,10 +73,8 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // ✅ 하단 네비게이션 처리
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNav.selectedItemId = R.id.nav_map
-
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -115,25 +108,35 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        // ✅ 카드뷰 누르면 숨김
         placeCardView.setOnClickListener {
-            val slideDown = TranslateAnimation(0f, 0f, 0f, placeCardView.height.toFloat()).apply {
-                duration = 300
-                fillAfter = true
+            hidePlaceCard()
+        }
+
+        // ✅ 외부 화면(지도 아무 곳) 클릭 시 카드뷰 숨기기
+        val rootLayout = findViewById<View>(R.id.activity_watching_map)
+        rootLayout.setOnClickListener {
+            if (placeCardView.visibility == View.VISIBLE) {
+                hidePlaceCard()
             }
-            slideDown.setAnimationListener(object : android.view.animation.Animation.AnimationListener {
-                override fun onAnimationStart(animation: android.view.animation.Animation?) {}
-                override fun onAnimationEnd(animation: android.view.animation.Animation?) {
-                    placeCardView.visibility = View.GONE
-                }
-                override fun onAnimationRepeat(animation: android.view.animation.Animation?) {}
-            })
-            placeCardView.startAnimation(slideDown)
         }
     }
 
     override fun onMapReady(map: NaverMap) {
         naverMap = map
         map.moveCamera(CameraUpdate.scrollTo(LatLng(37.3797, 126.8028)))
+    }
+
+    private fun hidePlaceCard() {
+        placeCardView.clearAnimation()
+        placeCardView.animate()
+            .translationY(placeCardView.height.toFloat() + 200f) // 충분히 아래로 내리기
+            .setDuration(300)
+            .withEndAction {
+                placeCardView.visibility = View.GONE
+                placeCardView.translationY = 0f // 위치 초기화
+            }
+            .start()
     }
 
     private fun searchMultipleKeywords(keywords: List<String>, category: String) {
@@ -156,7 +159,8 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
                     query = keyword,
                     location = location,
                     radius = radius,
-                    apiKey = apiKey
+                    apiKey = apiKey ,
+                    language = "ko"
                 )
 
                 if (response.isSuccessful) {
@@ -187,10 +191,14 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
                                     tvPlaceName.text = place.name
                                     tvAddress.text = place.formatted_address
 
-                                    val slideUp = TranslateAnimation(0f, 0f, placeCardView.height.toFloat(), 0f).apply {
+                                    val slideUp = TranslateAnimation(
+                                        0f, 0f,
+                                        placeCardView.height.toFloat(), 0f
+                                    ).apply {
                                         duration = 300
                                         fillAfter = true
                                     }
+
                                     placeCardView.visibility = View.VISIBLE
                                     placeCardView.startAnimation(slideUp)
                                     true

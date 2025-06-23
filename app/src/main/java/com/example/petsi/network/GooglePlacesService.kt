@@ -11,6 +11,7 @@ interface GooglePlacesService {
         @Query("query") query: String,
         @Query("location") location: String,
         @Query("radius") radius: Int,
-        @Query("key") apiKey: String
+        @Query("key") apiKey: String,
+        @Query("language") language: String
     ): Response<GooglePlacesResponse>
 }

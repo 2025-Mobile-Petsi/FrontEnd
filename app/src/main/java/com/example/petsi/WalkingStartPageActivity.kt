@@ -70,7 +70,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
         }
 
         binding.buttonStartWalking.setOnClickListener {
-            val intent = Intent(this, activity_watching_map::class.java)
+            val intent = Intent(this, activity_walking_with_map::class.java)
             val weatherText = skyToText(cachedWeather?.sky)
             intent.putExtra("weather", weatherText)
             startActivity(intent)
@@ -89,6 +89,11 @@ class WalkingStartPageActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_walk -> true
+                R.id.nav_map -> {
+                    startActivity(Intent(this, activity_watching_map::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
                 else -> false
             }
         }

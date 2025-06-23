@@ -13,6 +13,7 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_slow) // ✅ 애니메이션 적용
             finish()
         }, 2000) // 2초 후 MainActivity로 이동
     }

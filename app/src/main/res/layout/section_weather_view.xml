@@ -24,13 +24,6 @@
             android:textColor="@color/black"
             android:layout_marginBottom="5dp" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/textRefresh"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="새로 고침"-->
-<!--            android:textSize="10dp"-->
-<!--            android:textColor="@color/black" />-->
         <ImageView
             android:id="@+id/imageRefresh"
             android:layout_width="15dp"
@@ -124,8 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/textTemp"
@@ -157,7 +149,7 @@
                 android:background="@drawable/btn_rounded_button"
                 android:gravity="center"
                 android:padding="4dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="10dp" />
 
             <TextView
@@ -170,7 +162,7 @@
                 android:background="@drawable/btn_rounded_button"
                 android:gravity="center"
                 android:padding="4dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="10dp" />
 
             <TextView
@@ -181,7 +173,7 @@
                 android:background="@drawable/btn_rounded_button"
                 android:gravity="center"
                 android:padding="4dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="10dp" />
         </LinearLayout>
 

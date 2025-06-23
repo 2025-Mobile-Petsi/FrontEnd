@@ -12,9 +12,11 @@ import com.example.petsi.databinding.ActivitySignupBinding
 import android.graphics.Color
 import android.content.res.ColorStateList
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.petsi.app.model.request.CheckEmailRequest
 import com.example.petsi.app.model.request.VerifyCodeRequest
 import com.example.petsi.app.model.request.SignUpRequestUser
 import com.example.petsi.app.model.response.ResponseUser
+import com.example.petsi.app.model.response.ResponseEmail
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -99,6 +101,29 @@ class activity_signup : AppCompatActivity() {
             startTimer()
         }
 
+        //아이디 중복 확인
+        binding.btnCheckId.setOnClickListener {
+            val request = CheckEmailRequest (
+                email = binding.etId.text.toString()
+            )
+            api.email(request).enque(object : Callback<ResponseEmail> {
+                // 응답 성공 시 호출
+                override fun onResponse(call: Call<ResponseEmail>, response: Response<ResponseEmail>) {
+                    if (response.isSuccessful) {
+                        val isAvailable = response.body()?.resp == true
+                        Log.d("CheckEmail", "사용 가능 여부: $isAvailable")
+                    } else {
+                        Log.e("CheckEmail", "응답 실패: ${response.code()}")
+                    }
+                }
+
+                // 통신 자체 실패 (서버 연결 오류, 네트워크 문제 등)
+                override fun onFailure(call: Call<ResponseEmail>, t: Throwable) {
+                    Log.e("로그인", "요청 실패: ${t.message}")
+                }
+            })
+        }
+        
         // ✅ 확인 버튼 누르면 토스트만 표시
         binding.btnVerifyCode.setOnClickListener {
             val code = binding.etVerificationCode.text.toString()

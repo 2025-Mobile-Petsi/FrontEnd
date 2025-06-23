@@ -138,14 +138,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="2dp"
-                android:background="@drawable/btn_green_button">
+                android:padding="2dp">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/box_walk_record_card"
+                    android:src="@drawable/image_walking"
                     android:scaleType="fitCenter"/>
             </LinearLayout>
 

@@ -31,6 +31,9 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var tvPlaceName: TextView
     private lateinit var tvAddress: TextView
 
+    // ✅ 버튼 상태 저장 변수
+    private var selectedCategoryButton: LinearLayout? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_watching_map)
@@ -53,22 +56,30 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         val btnVet = findViewById<LinearLayout>(R.id.btn_vet)
         val btnPark = findViewById<LinearLayout>(R.id.btn_park)
 
+        // ✅ 각 버튼 클릭 시 선택 유지
         btnCafe.setOnClickListener {
+            updateSelectedCategory(btnCafe)
             searchMultipleKeywords(listOf("카페", "커피", "coffee", "다방"), "cafe")
         }
         btnFood.setOnClickListener {
+            updateSelectedCategory(btnFood)
             searchPlaces("음식점", "food")
         }
         btnVet.setOnClickListener {
+            updateSelectedCategory(btnVet)
             searchPlaces("동물병원", "vet")
         }
         btnPark.setOnClickListener {
+            updateSelectedCategory(btnPark)
             searchPlaces("공원", "park")
         }
 
+        // 🔍 검색창 → 선택 해제
         btnSearch.setOnClickListener {
             val keyword = etSearch.text.toString()
             if (keyword.isNotBlank()) {
+                selectedCategoryButton?.isSelected = false
+                selectedCategoryButton = null
                 searchPlaces(keyword, "default")
             }
         }
@@ -108,18 +119,23 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // ✅ 카드뷰 누르면 숨김
         placeCardView.setOnClickListener {
             hidePlaceCard()
         }
 
-        // ✅ 외부 화면(지도 아무 곳) 클릭 시 카드뷰 숨기기
         val rootLayout = findViewById<View>(R.id.activity_watching_map)
         rootLayout.setOnClickListener {
             if (placeCardView.visibility == View.VISIBLE) {
                 hidePlaceCard()
             }
         }
+    }
+
+    // ✅ 선택 상태 반영 함수
+    private fun updateSelectedCategory(newSelected: LinearLayout) {
+        selectedCategoryButton?.isSelected = false
+        newSelected.isSelected = true
+        selectedCategoryButton = newSelected
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -130,11 +146,11 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
     private fun hidePlaceCard() {
         placeCardView.clearAnimation()
         placeCardView.animate()
-            .translationY(placeCardView.height.toFloat() + 200f) // 충분히 아래로 내리기
+            .translationY(placeCardView.height.toFloat() + 200f)
             .setDuration(300)
             .withEndAction {
                 placeCardView.visibility = View.GONE
-                placeCardView.translationY = 0f // 위치 초기화
+                placeCardView.translationY = 0f
             }
             .start()
     }
@@ -159,7 +175,7 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
                     query = keyword,
                     location = location,
                     radius = radius,
-                    apiKey = apiKey ,
+                    apiKey = apiKey,
                     language = "ko"
                 )
 
@@ -217,12 +233,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getIconForCategory(category: String): OverlayImage {
-        return when (category) {
-            "cafe" -> OverlayImage.fromResource(R.drawable.ic_cafe)
-            "food" -> OverlayImage.fromResource(R.drawable.ic_food)
-            "vet" -> OverlayImage.fromResource(R.drawable.ic_hospital)
-            "park" -> OverlayImage.fromResource(R.drawable.ic_park)
-            else -> OverlayImage.fromResource(R.drawable.ic_filtering_dot)
-        }
+        return OverlayImage.fromResource(R.drawable.ic_filtering_dot)
     }
 }

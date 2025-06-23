@@ -107,7 +107,7 @@ class activity_signup : AppCompatActivity() {
         }
 
         //회원가입 정보 전달
-        binding.btn_register.setonClickListener {
+        binding.btnregister.setonClickListener {
             val request = SignUpRequestUser(
                 email = binding.etid.text.toString(),
                 password = binding.etPassword.text.toString(),

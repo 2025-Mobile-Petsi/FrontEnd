@@ -120,6 +120,23 @@ class activity_signup : AppCompatActivity() {
                 username =  binding.etname.text.toString(),
                 phoneNumber = binding.et_phone.text.toString()
             )
+
+            api.email(request).enque(object : Callback<ResponseUser> {
+                // 응답 성공 시 호출
+                override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
+                    if (response.isSuccessful) {
+                        Log.d("가입정보 전달", "성공: ${response.body()}")  // 정상 응답 로그 출력
+                    } else {
+                        Log.e("가입정보 전달", "오류: ${response.code()}")  // 서버 응답 실패 (ex. 400, 500)
+                    }
+                }
+
+                // 통신 자체 실패 (서버 연결 오류, 네트워크 문제 등)
+                override fun onFailure(call: Call<ResponseUser>, t: Throwable) {
+                    Log.e("가입", "요청 실패: ${t.message}")
+                }
+
+            })
         }
     }
 

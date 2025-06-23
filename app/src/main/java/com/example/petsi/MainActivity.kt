@@ -48,11 +48,13 @@ class MainActivity : AppCompatActivity() {
         // ✅ 산책하기 버튼
         binding.mainGoWalking.setOnClickListener {
             startActivity(Intent(this, WalkingStartPageActivity::class.java))
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast) // 추가
         }
 
         // ✅ 지도보기 버튼
         binding.btnSeeMap.setOnClickListener {
             startActivity(Intent(this, activity_watching_map::class.java))
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast) // 추가
         }
 
         // ✅ 하단 네비게이션 바 처리

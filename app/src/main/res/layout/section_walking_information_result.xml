@@ -31,6 +31,7 @@
             android:paddingVertical="3dp"
             android:text="오늘의 산책 기록"
             android:textColor="@color/main_color"
+            android:textStyle="bold"
             android:textSize="16dp" />
 
         <!-- ✅ 시작/종료 시간 + 총 시간/거리 -->

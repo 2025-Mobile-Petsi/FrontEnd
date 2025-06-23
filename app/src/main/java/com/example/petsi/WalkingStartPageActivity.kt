@@ -106,7 +106,7 @@ class WalkingStartPageActivity : AppCompatActivity() {
             loadWeather(baseDate, baseTime)
         }
 
-        binding.weatherSection.textRefresh.setOnClickListener {
+        binding.weatherSection.imageRefresh.setOnClickListener {
             val (refreshDate, refreshTime) = getBaseDateTime()
             Log.d(TAG, "날씨 새로고침 요청: $refreshDate / $refreshTime")
             loadWeather(refreshDate, refreshTime)

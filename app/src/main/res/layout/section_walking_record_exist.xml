@@ -20,8 +20,7 @@
         android:layout_height="180dp"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@drawable/box_walk_record_card"
-        android:elevation="4dp">
+        android:background="@drawable/box_walk_record_card">
 
         <!-- 상단: 날짜 + 버튼 -->
         <RelativeLayout
@@ -44,26 +43,6 @@
                 android:layout_centerVertical="true" />
 
             <!-- 버튼 (오른쪽 아래) -->
-            <Button
-                android:id="@+id/diary_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="8dp"
-
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-
-                android:text="산책 일기 쓰러가기!"
-                android:textColor="@color/white"
-                android:background="@drawable/btn_rounded_button"
-                android:textSize="10dp"
-                android:gravity="center" />
         </RelativeLayout>
 
 
@@ -82,7 +61,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:padding="12dp"
-                android:background="@drawable/btn_green_button">
+                android:background="@drawable/box_walk_full_box">
 
                 <TextView
                     android:id="@+id/walk_time_text"
@@ -111,7 +90,7 @@
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:padding="12dp"
-                android:background="@drawable/btn_green_button">
+                android:background="@drawable/box_walk_full_box">
 
                 <TextView
                     android:id="@+id/walk_distance_text"
@@ -131,23 +110,33 @@
             </LinearLayout>
 
             <!-- 사진 -->
-            <!-- 산책 거리 카드 -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:gravity="center"
-                android:padding="2dp"
-                android:background="@drawable/btn_green_button">
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@drawable/box_walk_border_box">
+
+                <!-- 이미지 -->
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:src="@drawable/box_walk_record_card"
-                    android:scaleType="fitCenter"/>
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/image_walk_result"
+                    android:scaleType="fitCenter" />
+
+                <!-- 텍스트 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="산책 일기 쓰러 가기!"
+                    android:textColor="@color/main_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
             </LinearLayout>
+
 
         </LinearLayout>
     </LinearLayout>

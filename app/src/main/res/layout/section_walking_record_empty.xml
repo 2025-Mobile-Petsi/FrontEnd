@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="20dp"
     android:id="@+id/walk_record_empty">
 
     <!-- 1. 제목 텍스트 -->
@@ -18,39 +19,46 @@
     <!-- 2. 박스 전체 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:orientation="vertical"
-        android:padding="1dp"
+        android:layout_height="200dp"
         android:background="@drawable/box_walk_record_card"
         android:gravity="center"
-        android:elevation="4dp">
+        android:orientation="vertical"
+        android:padding="1dp">
 
         <!-- 산책 기록 없음 텍스트 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="오늘의 산책기록이 없어요..."
+            android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textStyle="bold" />
 
         <!-- 이미지 -->
         <ImageView
             android:layout_width="100dp"
             android:layout_height="77dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:src="@drawable/image_no_record_image" />
 
         <!-- 산책하러 가기 버튼 스타일 텍스트뷰 -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/empty_go"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:autoText="false"
             android:background="@drawable/box_green_outline_box"
-            android:text="지금 바로 산책하러 가기!"
-            android:textColor="@color/main_color"
-            android:textSize="16sp"
-            android:paddingVertical="8dp"
+            android:fontFamily="@font/pretendard"
             android:paddingHorizontal="10dp"
-            android:textStyle="bold" />
+            android:paddingVertical="8dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:text="지금 바로 산책하러 가기!"
+            android:textAlignment="center"
+            android:textColor="@color/main_color"
+            android:textSize="14dp" />
     </LinearLayout>
 </LinearLayout>

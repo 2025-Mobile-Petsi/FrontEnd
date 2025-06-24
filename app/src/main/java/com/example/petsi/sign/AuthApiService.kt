@@ -1,9 +1,13 @@
 package com.example.petsi.sign
 
 import com.example.petsi.sign.model.request.CheckEmailRequest
+import com.example.petsi.sign.model.request.LoginRequest
 import com.example.petsi.sign.model.response.ResponseEmail
 import com.example.petsi.sign.model.request.PhoneNumberRequest
+import com.example.petsi.sign.model.request.SignUpRequestUser
 import com.example.petsi.sign.model.request.VerifyCodeRequest
+import com.example.petsi.sign.model.response.ResponseUser
+
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -25,4 +29,13 @@ interface AuthApiService {
         @Body request: CheckEmailRequest
     ): Call<ResponseEmail>  // == Call<Boolean>
 
+    @POST("/api/auth/signup")
+    fun signup(
+        @Body request: SignUpRequestUser
+    ): Call<ResponseUser>
+
+    @POST("api/users/login")
+    fun login(
+        @Body request: LoginRequest
+    ): Call<ResponseUser>
 }

@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.sign.SignApiClient
 import com.example.petsi.sign.model.request.*
+import com.example.petsi.sign.model.response.ResponseUser
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +26,8 @@ class activitysignup : AppCompatActivity() {
     private lateinit var etVerificationCode: EditText
     private lateinit var btnVerifyCode: Button
     private lateinit var tvTimer: TextView
+    private lateinit var etPassword: EditText
+    private lateinit var etName: EditText
 
     private var idAvailable = false
     private var phoneVerified = false
@@ -45,6 +48,8 @@ class activitysignup : AppCompatActivity() {
         etVerificationCode = findViewById(R.id.et_verification_code)
         btnVerifyCode = findViewById(R.id.btn_verify_code)
         tvTimer = findViewById(R.id.tv_timer)
+        etPassword = findViewById(R.id.et_password)
+        etName = findViewById(R.id.et_name)
 
         // 전화번호 입력 시 인증요청 버튼 활성화
         etPhone.addTextChangedListener(object : TextWatcher {
@@ -175,5 +180,36 @@ class activitysignup : AppCompatActivity() {
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         Log.d("SignUpLog", "Toast: $msg")
+    }
+
+    private fun signup() {
+        val email = etId.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+        val username = etName.text.toString().trim()
+        val phone = etPhone.text.toString().trim().replace("-", "")  // 하이픈 제거
+
+        val request = SignUpRequestUser(
+            email = email,
+            password = password,
+            username = username,
+            phoneNumber = phone
+        )
+
+        SignApiClient.authApiService.signup(request)
+            .enqueue(object : Callback<ResponseUser> {
+                override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
+                    if (response.isSuccessful) {
+                        toast("회원가입이 완료되었습니다!")
+                        // 예: 로그인 화면으로 이동
+                        finish()
+                    } else {
+                        toast("회원가입 실패: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseUser>, t: Throwable) {
+                    toast("네트워크 오류: 회원가입 요청 실패")
+                }
+            })
     }
 }

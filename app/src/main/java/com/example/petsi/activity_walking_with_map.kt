@@ -41,7 +41,9 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     private var lastLocation: Location? = null
     private val pathCoords = mutableListOf<LatLng>()
     private var walkLogId: Long = -1L
-    private var startTimeStr: String? = null
+
+    private var startMarker: Marker? = null
+    private var endMarker: Marker? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private val updateRunnable = object : Runnable {
@@ -116,7 +118,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: NaverMap) {
         naverMap = map
-
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
@@ -185,6 +186,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         accumulatedDistance = 0.0
                         pathCoords.clear()
                         pathOverlay.map = null
+                        endMarker?.map = null
 
                         val currentPosition = naverMap.locationOverlay.position
                         lastLocation = Location("").apply {
@@ -193,33 +195,36 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         }
                         pathCoords.add(currentPosition)
 
+                        // 산책 시작 시 마커
+                        startMarker?.map = null
+                        startMarker = Marker().apply {
+                            position = currentPosition
+                            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
+                            width = 96
+                            height = 96
+                        }
+
+                        startMarker?.map = naverMap
+                        startMarker?.map = naverMap
+
                         pathOverlay.color = Color.parseColor("#7DB36F")
                         pathOverlay.outlineColor = Color.parseColor("#7DB36F")
                         pathOverlay.width = 15
                         pathOverlay.outlineWidth = 3
 
-                        // ⚠️ setCoords는 두 좌표 이상일 때만 실행
-                        if (pathCoords.size >= 2) {
-                            pathOverlay.coords = pathCoords
-                            pathOverlay.map = naverMap
-                        }
-
                         handler.post(updateRunnable)
 
                         val request = WalkLogStartRequest(userId = 1L)
-
-                        ApiClient.walkLogApiService.startWalkLog(request)
-                            .enqueue(object : Callback<WalkLogResponse> {
-                                override fun onResponse(call: Call<WalkLogResponse>, response: Response<WalkLogResponse>) {
-                                    if (response.isSuccessful) {
-                                        walkLogId = response.body()?.walkLogId ?: -1L
-                                    }
+                        ApiClient.walkLogApiService.startWalkLog(request).enqueue(object : Callback<WalkLogResponse> {
+                            override fun onResponse(call: Call<WalkLogResponse>, response: Response<WalkLogResponse>) {
+                                if (response.isSuccessful) {
+                                    walkLogId = response.body()?.walkLogId ?: -1L
                                 }
-
-                                override fun onFailure(call: Call<WalkLogResponse>, t: Throwable) {
-                                    Log.e("WalkStart", "❌ 요청 실패: ${t.message}")
-                                }
-                            })
+                            }
+                            override fun onFailure(call: Call<WalkLogResponse>, t: Throwable) {
+                                Log.e("WalkStart", "❌ 요청 실패: ${t.message}")
+                            }
+                        })
                     }
                     .setNegativeButton("취소", null)
                     .show()
@@ -238,23 +243,28 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         val formattedEndTime = SimpleDateFormat("HH:mm", Locale.KOREA).format(Date(endTime))
                         val formattedDistance = String.format("%.1f km", accumulatedDistance / 1000.0)
 
+                        val currentPosition = naverMap.locationOverlay.position
+                        // 산책 종료 시 마커
+                        endMarker?.map = null
+                        endMarker = Marker().apply {
+                            position = currentPosition
+                            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
+                            width = 64
+                            height = 64
+                        }
+                        endMarker?.map = naverMap
+
+
                         if (walkLogId != -1L) {
-                            val reqEnd = WalkLogEndRequest(
-                                endTime = endTimeStr,
-                                distance = accumulatedDistance / 1000.0,
-                                weather = "정보 없음"
-                            )
-
-                            ApiClient.walkLogApiService.endWalkLog(walkLogId, reqEnd)
-                                .enqueue(object : Callback<WalkLogResponse> {
-                                    override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
-                                        if (r.isSuccessful) Log.d("WalkEnd", "종료 성공")
-                                    }
-
-                                    override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
-                                        Log.e("WalkEnd", "요청 오류 ${t.message}")
-                                    }
-                                })
+                            val reqEnd = WalkLogEndRequest(endTimeStr, accumulatedDistance / 1000.0, "정보 없음")
+                            ApiClient.walkLogApiService.endWalkLog(walkLogId, reqEnd).enqueue(object : Callback<WalkLogResponse> {
+                                override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
+                                    if (r.isSuccessful) Log.d("WalkEnd", "종료 성공")
+                                }
+                                override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
+                                    Log.e("WalkEnd", "요청 오류 ${t.message}")
+                                }
+                            })
                         }
 
                         showResultLayout(formattedStartTime, formattedEndTime, "${totalDurationMin}분", formattedDistance)

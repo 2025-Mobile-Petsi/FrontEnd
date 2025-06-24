@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.sign.SignApiClient
 import com.example.petsi.sign.model.request.LoginRequest
 import com.example.petsi.sign.model.response.LoginResponse
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +24,27 @@ class activitysignin : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
 
+        val navView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    // MainActivity → 자신이므로 재시작 대신 무시
+                    true
+                }
+                R.id.nav_walk -> {
+                    startActivity(Intent(this, WalkingStartPageActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                R.id.nav_map -> {
+                    startActivity(Intent(this, activity_watching_map::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                    true
+                }
+                else -> false
+            }
+        }
+
         // 뷰 연결
         etId = findViewById(R.id.et_id)
         etPassword = findViewById(R.id.et_password)
@@ -33,6 +55,7 @@ class activitysignin : AppCompatActivity() {
         btnSignUp.setOnClickListener {
             val intent = Intent(this, activitysignup::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
         }
 
         // 로그인 버튼

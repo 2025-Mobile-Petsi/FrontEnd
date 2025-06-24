@@ -43,7 +43,8 @@ class activitysignup : AppCompatActivity() {
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    // MainActivity → 자신이므로 재시작 대신 무시
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
                     true
                 }
                 R.id.nav_walk -> {

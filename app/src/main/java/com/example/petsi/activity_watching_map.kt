@@ -1,5 +1,6 @@
 package com.example.petsi
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     private var naverMap: NaverMap? = null
+    private lateinit var locationSource: FusedLocationSource
     private val markerList = mutableListOf<Marker>()
     private val apiKey = "AIzaSyBJQf641ng07ZFAANR894VKImePUfvA04I"
 
@@ -31,7 +34,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var tvPlaceName: TextView
     private lateinit var tvAddress: TextView
 
-    // ✅ 버튼 상태 저장 변수
     private var selectedCategoryButton: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,8 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
                 supportFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
             }
         mapFragment.getMapAsync(this)
+
+        locationSource = FusedLocationSource(this, 1000)
 
         etSearch = findViewById(R.id.et_search)
         btnSearch = findViewById(R.id.btn_search)
@@ -56,7 +60,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         val btnVet = findViewById<LinearLayout>(R.id.btn_vet)
         val btnPark = findViewById<LinearLayout>(R.id.btn_park)
 
-        // ✅ 각 버튼 클릭 시 선택
         btnCafe.setOnClickListener {
             updateSelectedCategory(btnCafe)
             searchMultipleKeywords(listOf("카페", "커피", "coffee", "다방"), "cafe")
@@ -74,7 +77,6 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             searchPlaces("공원", "park")
         }
 
-        // 🔍 검색창 → 선택 해제
         btnSearch.setOnClickListener {
             val keyword = etSearch.text.toString()
             if (keyword.isNotBlank()) {
@@ -104,18 +106,10 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
         }
 
         btnMyLocation.setOnClickListener {
-            val jeongwang = LatLng(37.3514, 126.7426)
-            naverMap?.let { myMap ->
-                myMap.moveCamera(CameraUpdate.scrollTo(jeongwang))
-                val myMarker = Marker().apply {
-                    position = jeongwang
-                    captionText = "내 위치"
-                    icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-                    width = 64
-                    height = 64
-                    map = myMap
-                }
-                markerList.add(myMarker)
+            val coord = naverMap?.locationOverlay?.position
+            coord?.let {
+                naverMap?.moveCamera(CameraUpdate.scrollTo(coord))
+                Log.d("MyLocation", "내 위치 이동: $coord")
             }
         }
 
@@ -123,15 +117,13 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
             hidePlaceCard()
         }
 
-        val rootLayout = findViewById<View>(R.id.activity_watching_map)
-        rootLayout.setOnClickListener {
+        findViewById<View>(R.id.activity_watching_map).setOnClickListener {
             if (placeCardView.visibility == View.VISIBLE) {
                 hidePlaceCard()
             }
         }
     }
 
-    // ✅ 선택 상태 반영 함수
     private fun updateSelectedCategory(newSelected: LinearLayout) {
         selectedCategoryButton?.isSelected = false
         newSelected.isSelected = true
@@ -140,22 +132,16 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: NaverMap) {
         naverMap = map
+        map.locationSource = locationSource
+        map.locationTrackingMode = LocationTrackingMode.Face  // ✅ 또는 FollowNoHeading
 
-        val myLocation = LatLng(37.3514, 126.7426)
-        map.moveCamera(CameraUpdate.scrollTo(myLocation).animate(CameraAnimation.Fly))
-
-        val myMarker = Marker().apply {
-            position = myLocation
-            captionText = "내 위치"
-            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-            width = 64
-            height = 64
+        map.locationOverlay.apply {
+            isVisible = true
+            icon = OverlayImage.fromResource(R.color.main_color)
         }
 
-        myMarker.map = naverMap  // ✅ setter로 할당
-        markerList.add(myMarker)
+        Log.d("MapReady", "위치 추적 모드: Face / 기본 마커 적용됨")
     }
-
 
     private fun hidePlaceCard() {
         placeCardView.clearAnimation()
@@ -248,5 +234,14 @@ class activity_watching_map : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getIconForCategory(category: String): OverlayImage {
         return OverlayImage.fromResource(R.drawable.ic_filtering_dot)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (::locationSource.isInitialized && locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated) {
+                naverMap?.locationTrackingMode = LocationTrackingMode.None
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

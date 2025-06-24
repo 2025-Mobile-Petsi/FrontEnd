@@ -31,8 +31,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-    private val markerList = mutableListOf<Marker>()
-
     private val pathOverlay = PathOverlay()
 
     private var isWalking = false
@@ -41,7 +39,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     private var lastLocation: Location? = null
     private val pathCoords = mutableListOf<LatLng>()
     private var walkLogId: Long = -1L
-
     private var startMarker: Marker? = null
     private var endMarker: Marker? = null
 
@@ -70,6 +67,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         findViewById<ImageView>(R.id.btn_gps).setOnClickListener {
             if (::naverMap.isInitialized) {
                 val coord = naverMap.locationOverlay.position
+                Log.d("LocationDebug", "GPS 버튼 클릭 위치: $coord")
                 naverMap.moveCamera(CameraUpdate.scrollTo(coord))
             }
         }
@@ -119,31 +117,23 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: NaverMap) {
         naverMap = map
         naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
-        val fixedLatLng = LatLng(37.3514, 126.7426)
-        naverMap.moveCamera(CameraUpdate.scrollTo(fixedLatLng).animate(CameraAnimation.Fly))
+        naverMap.locationTrackingMode = LocationTrackingMode.Face // ✅ 더 빠른 위치 반응
 
         naverMap.locationOverlay.apply {
             isVisible = true
-            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-            position = fixedLatLng
+            icon = OverlayImage.fromResource(R.color.main_color)
+            Log.d("LocationDebug", "기본 마커 설정됨: isVisible=$isVisible, position=$position")
         }
-
-        lastLocation = Location("").apply {
-            latitude = fixedLatLng.latitude
-            longitude = fixedLatLng.longitude
-        }
-        pathCoords.clear()
-        pathCoords.add(fixedLatLng)
 
         var firstLocationSet = false
         naverMap.addOnLocationChangeListener { location ->
             val latLng = LatLng(location.latitude, location.longitude)
             naverMap.locationOverlay.position = latLng
+            Log.d("LocationDebug", "위치 변경됨: $latLng")
 
             if (!firstLocationSet) {
                 firstLocationSet = true
+                Log.d("LocationDebug", "최초 위치로 카메라 이동")
                 naverMap.moveCamera(CameraUpdate.scrollTo(latLng).animate(CameraAnimation.Fly))
             }
 
@@ -195,7 +185,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         }
                         pathCoords.add(currentPosition)
 
-                        // 산책 시작 시 마커
                         startMarker?.map = null
                         startMarker = Marker().apply {
                             position = currentPosition
@@ -203,8 +192,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                             width = 96
                             height = 96
                         }
-
-                        startMarker?.map = naverMap
                         startMarker?.map = naverMap
 
                         pathOverlay.color = Color.parseColor("#7DB36F")
@@ -221,6 +208,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                                     walkLogId = response.body()?.walkLogId ?: -1L
                                 }
                             }
+
                             override fun onFailure(call: Call<WalkLogResponse>, t: Throwable) {
                                 Log.e("WalkStart", "❌ 요청 실패: ${t.message}")
                             }
@@ -244,16 +232,14 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         val formattedDistance = String.format("%.1f km", accumulatedDistance / 1000.0)
 
                         val currentPosition = naverMap.locationOverlay.position
-                        // 산책 종료 시 마커
                         endMarker?.map = null
                         endMarker = Marker().apply {
                             position = currentPosition
                             icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-                            width = 64
-                            height = 64
+                            width = 96
+                            height = 96
                         }
                         endMarker?.map = naverMap
-
 
                         if (walkLogId != -1L) {
                             val reqEnd = WalkLogEndRequest(endTimeStr, accumulatedDistance / 1000.0, "정보 없음")
@@ -261,6 +247,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                                 override fun onResponse(c: Call<WalkLogResponse>, r: Response<WalkLogResponse>) {
                                     if (r.isSuccessful) Log.d("WalkEnd", "종료 성공")
                                 }
+
                                 override fun onFailure(c: Call<WalkLogResponse>, t: Throwable) {
                                     Log.e("WalkEnd", "요청 오류 ${t.message}")
                                 }

@@ -1,5 +1,6 @@
 package com.example.petsi
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -31,6 +32,7 @@ class activitysignup : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var etName: EditText
     private lateinit var btnRegister: Button
+    private lateinit var btnSignIn: ImageButton
 
     private var idAvailable = false
     private var phoneVerified = false
@@ -39,6 +41,7 @@ class activitysignup : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+
         val navView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -61,7 +64,6 @@ class activitysignup : AppCompatActivity() {
             }
         }
 
-        // 뷰 연결
         etId = findViewById(R.id.et_id)
         btnCheckId = findViewById(R.id.btn_check_id)
         etPhone = findViewById(R.id.et_phone)
@@ -73,14 +75,17 @@ class activitysignup : AppCompatActivity() {
         etPassword = findViewById(R.id.et_password)
         etName = findViewById(R.id.et_name)
         btnRegister = findViewById(R.id.btn_register)
+        btnSignIn = findViewById(R.id.btn_sign_in)
 
-        // 버튼 초기 상태
         btnVerify.isEnabled = false
         btnVerifyCode.isEnabled = false
         btnCheckId.isEnabled = false
+        btnRegister.isEnabled = false
 
         val watcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = updateRegisterButtonStyle()
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStates()
+            }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
@@ -91,79 +96,62 @@ class activitysignup : AppCompatActivity() {
         etPhone.addTextChangedListener(watcher)
         etVerificationCode.addTextChangedListener(watcher)
 
-        etPhone.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val phone = s.toString().replace("-", "")
-                btnVerify.isEnabled = phone.length == 11
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        etVerificationCode.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                btnVerifyCode.isEnabled = s?.length == 6
-                updateRegisterButtonStyle()
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        etId.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                btnCheckId.isEnabled = s?.length ?: 0 >= 5
-                updateRegisterButtonStyle()
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
         btnCheckId.setOnClickListener {
             val id = etId.text.toString().trim()
-            if (id.isBlank()) {
-                toast("아이디를 입력해주세요.")
-                return@setOnClickListener
+            if (id.isNotBlank()) {
+                checkIdDuplicate(id)
             }
-            checkIdDuplicate(id)
         }
 
         btnVerify.setOnClickListener {
             val phone = etPhone.text.toString().trim().replace("-", "")
-            if (phone.isBlank()) {
-                toast("전화번호를 입력해주세요.")
-                return@setOnClickListener
+            if (phone.length == 11) {
+                sendVerificationCode(phone)
             }
-            sendVerificationCode(phone)
         }
 
         btnVerifyCode.setOnClickListener {
             val phone = etPhone.text.toString().trim().replace("-", "")
             val code = etVerificationCode.text.toString().trim()
-            if (phone.isBlank() || code.isBlank()) {
-                toast("전화번호와 인증번호를 모두 입력해주세요.")
-                return@setOnClickListener
+            if (phone.isNotBlank() && code.length == 6) {
+                verifyCode(phone, code)
             }
-            verifyCode(phone, code)
         }
 
         btnRegister.setOnClickListener {
-            when {
-                etName.text.isNullOrBlank() -> toast("이름을 입력해주세요.")
-                etPhone.text.isNullOrBlank() -> toast("전화번호를 입력해주세요.")
-                etVerificationCode.text.isNullOrBlank() -> toast("인증번호를 입력해주세요.")
-                etId.text.isNullOrBlank() -> toast("아이디를 입력해주세요.")
-                etPassword.text.isNullOrBlank() -> toast("비밀번호를 입력해주세요.")
-                !idAvailable -> toast("아이디 중복 확인을 해주세요.")
-                !phoneVerified -> toast("전화번호 인증을 해주세요.")
-                else -> signup()
-            }
+            if (!isAllInputValid()) return@setOnClickListener
+            if (!idAvailable || !phoneVerified) return@setOnClickListener
+            signup()
+        }
+
+        btnSignIn.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("알림")
+                .setMessage("회원가입에서 나가시겠습니까?")
+                .setPositiveButton("확인") { _, _ ->
+                    val intent = Intent(this, activitysignin::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_fast)
+                }
+                .setNegativeButton("취소", null)
+                .show()
         }
     }
 
-    private fun updateRegisterButtonStyle() {
-        val isValid = isAllInputValid() && idAvailable && phoneVerified
+    private fun updateButtonStates() {
+        val id = etId.text.toString().trim()
+        val pw = etPassword.text.toString().trim()
+        val name = etName.text.toString().trim()
+        val phone = etPhone.text.toString().trim().replace("-", "")
+        val code = etVerificationCode.text.toString().trim()
+
+        btnCheckId.isEnabled = id.length >= 5
+        btnVerify.isEnabled = phone.length == 11
+        btnVerifyCode.isEnabled = code.length == 6
+
+        val isValid = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank() && phone.isNotBlank() && code.isNotBlank() && idAvailable && phoneVerified
+        btnRegister.isEnabled = isValid
         btnRegister.setBackgroundColor(getColor(if (isValid) R.color.main_color else R.color.sign_button))
-        btnRegister.isEnabled = true  // 항상 활성화 상태
     }
 
     private fun isAllInputValid(): Boolean {
@@ -174,6 +162,11 @@ class activitysignup : AppCompatActivity() {
                 etVerificationCode.text.isNotBlank()
     }
 
+    private fun toast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        Log.d("SignUpLog", msg)
+    }
+
     private fun checkIdDuplicate(id: String) {
         val request = CheckEmailRequest(id)
         SignApiClient.authApiService.checkIdDuplicate(request)
@@ -182,8 +175,9 @@ class activitysignup : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val isDuplicate = response.body() == true
                         idAvailable = !isDuplicate
-                        toast(if (isDuplicate) "이미 사용 중인 아이디입니다." else "사용 가능한 아이디입니다.")
-                        updateRegisterButtonStyle()
+                        val message = if (isDuplicate) "이미 사용 중인 아이디입니다." else "사용 가능한 아이디입니다."
+                        toast(message)
+                        updateButtonStates()
                     } else {
                         toast("서버 오류: 중복확인 실패")
                     }
@@ -230,7 +224,7 @@ class activitysignup : AppCompatActivity() {
                         countDownTimer?.cancel()
                         etVerificationCode.isEnabled = false
                         btnVerifyCode.isEnabled = false
-                        updateRegisterButtonStyle()
+                        updateButtonStates()
                     } else {
                         toast("인증번호가 일치하지 않습니다.")
                     }
@@ -252,15 +246,11 @@ class activitysignup : AppCompatActivity() {
                 val seconds = (millisUntilFinished % 60000) / 1000
                 tvTimer.text = String.format("%02d:%02d 남음", minutes, seconds)
             }
+
             override fun onFinish() {
                 tvTimer.text = "시간 만료"
             }
         }.start()
-    }
-
-    private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        Log.d("SignUpLog", "Toast: $msg")
     }
 
     private fun signup() {

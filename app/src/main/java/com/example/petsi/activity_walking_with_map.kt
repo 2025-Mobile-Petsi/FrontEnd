@@ -117,37 +117,18 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: NaverMap) {
         naverMap = map
 
-        // ❌ 위치 소스 설정 및 추적 모드 주석 처리
-        // naverMap.locationSource = locationSource
-        // naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-        // ✅ 정왕역 하드코딩 위치
         val fixedLatLng = LatLng(37.3514, 126.7426)
-
-        // ✅ 지도 초기 위치 이동
         naverMap.moveCamera(CameraUpdate.scrollTo(fixedLatLng).animate(CameraAnimation.Fly))
 
-        // ✅ 위치 오버레이 (파란 점) 설정
         naverMap.locationOverlay.apply {
             isVisible = true
             icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
             position = fixedLatLng
         }
 
-        // ✅ 정왕역 마커 추가
-        val myMarker = Marker().apply {
-            position = fixedLatLng
-            captionText = "내 위치"
-            icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-            width = 64
-            height = 64
-            captionOffset = 50 // ⬅ 위로 띄우기
-            captionColor = Color.BLACK
-        }
-        myMarker.map = naverMap
-        markerList.add(myMarker)
-
-        // ✅ 거리 측정 시작 지점 설정
         lastLocation = Location("").apply {
             latitude = fixedLatLng.latitude
             longitude = fixedLatLng.longitude
@@ -155,17 +136,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         pathCoords.clear()
         pathCoords.add(fixedLatLng)
 
-        // ✅ 초기 경로 오버레이 표시
-        if (pathCoords.size >= 2) {
-            pathOverlay.coords = pathCoords
-            pathOverlay.map = naverMap
-        }
-
-
-        /*
-        // ❌ 실시간 위치 추적 → GPS 기반 추적 제거
         var firstLocationSet = false
-
         naverMap.addOnLocationChangeListener { location ->
             val latLng = LatLng(location.latitude, location.longitude)
             naverMap.locationOverlay.position = latLng
@@ -173,26 +144,12 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
             if (!firstLocationSet) {
                 firstLocationSet = true
                 naverMap.moveCamera(CameraUpdate.scrollTo(latLng).animate(CameraAnimation.Fly))
-
-                val myMarker = Marker().apply {
-                    position = latLng
-                    captionText = "내 위치"
-                    icon = OverlayImage.fromResource(R.drawable.ic_dot_my)
-                    width = 64
-                    height = 64
-                }
-                myMarker.map = naverMap
-                markerList.add(myMarker)
             }
 
             if (isWalking) {
                 lastLocation?.let {
                     val results = FloatArray(1)
-                    Location.distanceBetween(
-                        it.latitude, it.longitude,
-                        location.latitude, location.longitude,
-                        results
-                    )
+                    Location.distanceBetween(it.latitude, it.longitude, location.latitude, location.longitude, results)
                     accumulatedDistance += results[0]
                 }
 
@@ -205,9 +162,7 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
-        */
     }
-
 
     private fun showRunningLayout() {
         val container = findViewById<FrameLayout>(R.id.walkInfoContainer)
@@ -229,13 +184,25 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                         btnStartEnd.text = "산책 종료하기"
                         accumulatedDistance = 0.0
                         pathCoords.clear()
-                        lastLocation = null
                         pathOverlay.map = null
+
+                        val currentPosition = naverMap.locationOverlay.position
+                        lastLocation = Location("").apply {
+                            latitude = currentPosition.latitude
+                            longitude = currentPosition.longitude
+                        }
+                        pathCoords.add(currentPosition)
 
                         pathOverlay.color = Color.parseColor("#7DB36F")
                         pathOverlay.outlineColor = Color.parseColor("#7DB36F")
                         pathOverlay.width = 15
                         pathOverlay.outlineWidth = 3
+
+                        // ⚠️ setCoords는 두 좌표 이상일 때만 실행
+                        if (pathCoords.size >= 2) {
+                            pathOverlay.coords = pathCoords
+                            pathOverlay.map = naverMap
+                        }
 
                         handler.post(updateRunnable)
 
@@ -308,7 +275,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
         findViewById<TextView>(R.id.totalTime)?.text = total
         findViewById<TextView>(R.id.totalDistance)?.text = distance
 
-        // ✅ 알림창 확인 후 메인으로 이동
         findViewById<Button>(R.id.btnBackToMain)?.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage("메인으로 이동하시겠습니까?")
@@ -323,7 +289,6 @@ class activity_walking_with_map : AppCompatActivity(), OnMapReadyCallback {
                 .show()
         }
     }
-
 
     private fun confirmExitDuringWalk(onConfirmed: () -> Unit) {
         if (isWalking) {

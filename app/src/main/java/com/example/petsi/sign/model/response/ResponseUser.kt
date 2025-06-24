@@ -9,6 +9,6 @@ data class ResponseUser (
     val password: String,
     val username: String,
     val phoneNumber: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val createdAt: String,
+    val updatedAt: String
 )

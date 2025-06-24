@@ -60,7 +60,19 @@ class activitysignin : AppCompatActivity() {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val user = response.body()
-                        Toast.makeText(this@activitysignin, "${user?.username}님 환영합니다!", Toast.LENGTH_SHORT).show()
+                        if (user != null) {
+                            // ✅ userId 저장 (SharedPreferences 사용)
+                            val prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                            prefs.edit().putLong("userId", user.id).apply()
+
+                            // ✅ MainActivity로 이동
+                            Toast.makeText(this@activitysignin, "${user.username}님 환영합니다!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@activitysignin, MainActivity::class.java)
+                            startActivity(intent)
+                            finish() // 로그인 화면 종료
+                        } else {
+                            Toast.makeText(this@activitysignin, "응답이 비어 있습니다.", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Log.e("Login", "실패 응답: ${response.errorBody()?.string()}")
                         Toast.makeText(this@activitysignin, "로그인 실패 (${response.code()})", Toast.LENGTH_SHORT).show()

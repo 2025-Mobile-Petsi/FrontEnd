@@ -59,9 +59,9 @@
                 android:layout_marginEnd="24dp"
                 android:background="@null"
                 android:contentDescription="Sign In"
-                android:src="@drawable/sign_in"
                 android:elevation="0dp"
-                android:stateListAnimator="@null"/>
+                android:src="@drawable/sign_in"
+                android:stateListAnimator="@null" />
 
             <ImageButton
                 android:id="@+id/btn_sign_up"

@@ -13,12 +13,12 @@ interface AuthApiService {
     @POST("/api/sms/send-code")
     fun sendVerificationCode(
         @Body request: PhoneNumberRequest
-    ): Call<Boolean>
+    ): Call<Void>  // ✅ 바꿈
 
     @POST("/api/sms/verify-code")
     fun verifyCode(
         @Body request: VerifyCodeRequest
-    ): Call<Boolean>
+    ): Call<Void>  // ✅ 바꿈
 
     @POST("/api/auth/check-email")
     fun checkIdDuplicate(

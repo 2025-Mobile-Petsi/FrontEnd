@@ -3,6 +3,8 @@ package com.example.petsi
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -34,6 +36,7 @@ class activitysignup : AppCompatActivity() {
 
         val TAG = "SignUpLog"
 
+        // 뷰 연결
         etId = findViewById(R.id.et_id)
         btnCheckId = findViewById(R.id.btn_check_id)
         etPhone = findViewById(R.id.et_phone)
@@ -42,6 +45,15 @@ class activitysignup : AppCompatActivity() {
         etVerificationCode = findViewById(R.id.et_verification_code)
         btnVerifyCode = findViewById(R.id.btn_verify_code)
         tvTimer = findViewById(R.id.tv_timer)
+
+        // 전화번호 입력 시 인증요청 버튼 활성화
+        etPhone.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                btnVerify.isEnabled = !s.isNullOrBlank()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
         // 아이디 중복확인
         btnCheckId.setOnClickListener {
@@ -53,9 +65,9 @@ class activitysignup : AppCompatActivity() {
             checkIdDuplicate(id)
         }
 
-        // 인증요청
+        // 인증 요청
         btnVerify.setOnClickListener {
-            val phone = etPhone.text.toString().trim()
+            val phone = etPhone.text.toString().trim().replace("-", "") // ✅ 하이픈 제거
             if (phone.isBlank()) {
                 toast("전화번호를 입력해주세요.")
                 return@setOnClickListener
@@ -63,9 +75,9 @@ class activitysignup : AppCompatActivity() {
             sendVerificationCode(phone)
         }
 
-        // 인증확인
+        // 인증 확인
         btnVerifyCode.setOnClickListener {
-            val phone = etPhone.text.toString().trim()
+            val phone = etPhone.text.toString().trim().replace("-", "") // ✅ 하이픈 제거
             val code = etVerificationCode.text.toString().trim()
             if (phone.isBlank() || code.isBlank()) {
                 toast("전화번호와 인증번호를 모두 입력해주세요.")
@@ -103,18 +115,18 @@ class activitysignup : AppCompatActivity() {
     private fun sendVerificationCode(phone: String) {
         val request = PhoneNumberRequest(phone)
         SignApiClient.authApiService.sendVerificationCode(request)
-            .enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if (response.isSuccessful && response.body() == true) {
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
                         toast("인증번호가 전송되었습니다.")
                         layoutVerification.visibility = View.VISIBLE
                         startTimer()
                     } else {
-                        toast("인증번호 전송 실패")
+                        toast("인증번호 전송 실패 (code: ${response.code()})")
                     }
                 }
 
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     toast("네트워크 오류: 인증번호 전송 실패")
                 }
             })
@@ -123,9 +135,9 @@ class activitysignup : AppCompatActivity() {
     private fun verifyCode(phone: String, code: String) {
         val request = VerifyCodeRequest(phone, code)
         SignApiClient.authApiService.verifyCode(request)
-            .enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if (response.isSuccessful && response.body() == true) {
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
                         toast("인증 성공!")
                         phoneVerified = true
                         tvTimer.text = "인증 완료"
@@ -136,7 +148,7 @@ class activitysignup : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     toast("네트워크 오류: 인증 실패")
                 }
             })

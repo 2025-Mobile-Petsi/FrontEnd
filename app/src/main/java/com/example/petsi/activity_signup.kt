@@ -28,6 +28,7 @@ class activitysignup : AppCompatActivity() {
     private lateinit var tvTimer: TextView
     private lateinit var etPassword: EditText
     private lateinit var etName: EditText
+    private lateinit var btnRegister: Button
 
     private var idAvailable = false
     private var phoneVerified = false
@@ -36,8 +37,6 @@ class activitysignup : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-
-        val TAG = "SignUpLog"
 
         // 뷰 연결
         etId = findViewById(R.id.et_id)
@@ -50,12 +49,58 @@ class activitysignup : AppCompatActivity() {
         tvTimer = findViewById(R.id.tv_timer)
         etPassword = findViewById(R.id.et_password)
         etName = findViewById(R.id.et_name)
+        btnRegister = findViewById(R.id.btn_register)
 
-        // 전화번호 입력 시 인증요청 버튼 활성화
+        // 초기 버튼 비활성화
+        btnVerify.isEnabled = false
+        btnVerifyCode.isEnabled = false
+        btnCheckId.isEnabled = false
+
+        // 텍스트 변경 감지
+        val watcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                updateRegisterButtonState()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        etId.addTextChangedListener(watcher)
+        etPassword.addTextChangedListener(watcher)
+        etName.addTextChangedListener(watcher)
+        etPhone.addTextChangedListener(watcher)
+        etVerificationCode.addTextChangedListener(watcher)
+
+        // 전화번호 11자리 → 인증 요청 버튼 활성화
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                btnVerify.isEnabled = !s.isNullOrBlank()
+                val phone = s.toString().replace("-", "")
+                btnVerify.isEnabled = phone.length == 11
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        // 인증번호 6자리 → 인증 확인 버튼 활성화
+        etVerificationCode.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                btnVerifyCode.isEnabled = s?.length == 6
+                updateRegisterButtonState()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        // 아이디 5자 이상 → 중복확인 버튼 활성화
+        etId.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                btnCheckId.isEnabled = s?.length ?: 0 >= 5
+                updateRegisterButtonState()
+            }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -72,7 +117,7 @@ class activitysignup : AppCompatActivity() {
 
         // 인증 요청
         btnVerify.setOnClickListener {
-            val phone = etPhone.text.toString().trim().replace("-", "") // ✅ 하이픈 제거
+            val phone = etPhone.text.toString().trim().replace("-", "")
             if (phone.isBlank()) {
                 toast("전화번호를 입력해주세요.")
                 return@setOnClickListener
@@ -82,7 +127,7 @@ class activitysignup : AppCompatActivity() {
 
         // 인증 확인
         btnVerifyCode.setOnClickListener {
-            val phone = etPhone.text.toString().trim().replace("-", "") // ✅ 하이픈 제거
+            val phone = etPhone.text.toString().trim().replace("-", "")
             val code = etVerificationCode.text.toString().trim()
             if (phone.isBlank() || code.isBlank()) {
                 toast("전화번호와 인증번호를 모두 입력해주세요.")
@@ -90,6 +135,58 @@ class activitysignup : AppCompatActivity() {
             }
             verifyCode(phone, code)
         }
+
+        // 회원가입 버튼
+        btnRegister.setOnClickListener {
+            // 필수 항목 누락 시 항목별 안내
+            when {
+                etName.text.isNullOrBlank() -> {
+                    toast("이름을 입력해주세요.")
+                    return@setOnClickListener
+                }
+                etPhone.text.isNullOrBlank() -> {
+                    toast("전화번호를 입력해주세요.")
+                    return@setOnClickListener
+                }
+                etVerificationCode.text.isNullOrBlank() -> {
+                    toast("인증번호를 입력해주세요.")
+                    return@setOnClickListener
+                }
+                etId.text.isNullOrBlank() -> {
+                    toast("아이디를 입력해주세요.")
+                    return@setOnClickListener
+                }
+                etPassword.text.isNullOrBlank() -> {
+                    toast("비밀번호를 입력해주세요.")
+                    return@setOnClickListener
+                }
+            }
+
+            if (!idAvailable) {
+                toast("아이디 중복 확인을 해주세요.")
+                return@setOnClickListener
+            }
+
+            if (!phoneVerified) {
+                toast("전화번호 인증을 해주세요.")
+                return@setOnClickListener
+            }
+
+            signup()
+        }
+    }
+
+    private fun updateRegisterButtonState() {
+        val enabled = isAllInputValid() && idAvailable && phoneVerified
+        btnRegister.isEnabled = enabled
+    }
+
+    private fun isAllInputValid(): Boolean {
+        return etId.text.isNotBlank() &&
+                etPassword.text.isNotBlank() &&
+                etName.text.isNotBlank() &&
+                etPhone.text.isNotBlank() &&
+                etVerificationCode.text.isNotBlank()
     }
 
     private fun checkIdDuplicate(id: String) {
@@ -106,6 +203,7 @@ class activitysignup : AppCompatActivity() {
                             toast("사용 가능한 아이디입니다.")
                             idAvailable = true
                         }
+                        updateRegisterButtonState()
                     } else {
                         toast("서버 오류: 중복확인 실패")
                     }
@@ -125,6 +223,8 @@ class activitysignup : AppCompatActivity() {
                     if (response.isSuccessful) {
                         toast("인증번호가 전송되었습니다.")
                         layoutVerification.visibility = View.VISIBLE
+                        val innerLayout = layoutVerification.getChildAt(0) as LinearLayout
+                        innerLayout.visibility = View.VISIBLE
                         startTimer()
                     } else {
                         toast("인증번호 전송 실패 (code: ${response.code()})")
@@ -148,6 +248,9 @@ class activitysignup : AppCompatActivity() {
                         tvTimer.text = "인증 완료"
                         tvTimer.setTextColor(Color.BLUE)
                         countDownTimer?.cancel()
+                        etVerificationCode.isEnabled = false
+                        btnVerifyCode.isEnabled = false
+                        updateRegisterButtonState()
                     } else {
                         toast("인증번호가 일치하지 않습니다.")
                     }
@@ -186,7 +289,7 @@ class activitysignup : AppCompatActivity() {
         val email = etId.text.toString().trim()
         val password = etPassword.text.toString().trim()
         val username = etName.text.toString().trim()
-        val phone = etPhone.text.toString().trim().replace("-", "")  // 하이픈 제거
+        val phone = etPhone.text.toString().trim().replace("-", "")
 
         val request = SignUpRequestUser(
             email = email,
@@ -200,7 +303,6 @@ class activitysignup : AppCompatActivity() {
                 override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
                     if (response.isSuccessful) {
                         toast("회원가입이 완료되었습니다!")
-                        // 예: 로그인 화면으로 이동
                         finish()
                     } else {
                         toast("회원가입 실패: ${response.code()}")

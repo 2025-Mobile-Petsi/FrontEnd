@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petsi.sign.SignApiClient
-import com.example.petsi.sign.model.request.LoginRequest
-import com.example.petsi.sign.model.response.LoginResponse
 import com.example.petsi.sign.model.response.ResponseUser
 import retrofit2.Call
 import retrofit2.Callback

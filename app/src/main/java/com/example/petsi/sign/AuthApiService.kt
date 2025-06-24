@@ -1,7 +1,6 @@
 package com.example.petsi.sign
 
 import com.example.petsi.sign.model.request.CheckEmailRequest
-import com.example.petsi.sign.model.request.LoginRequest
 import com.example.petsi.sign.model.response.ResponseEmail
 import com.example.petsi.sign.model.request.PhoneNumberRequest
 import com.example.petsi.sign.model.request.SignUpRequestUser
@@ -32,10 +31,5 @@ interface AuthApiService {
     @POST("/api/auth/signup")
     fun signup(
         @Body request: SignUpRequestUser
-    ): Call<ResponseUser>
-
-    @POST("api/users/login")
-    fun login(
-        @Body request: LoginRequest
     ): Call<ResponseUser>
 }
